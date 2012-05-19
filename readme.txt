@@ -4,6 +4,7 @@ lighweight web torrent archive engine
 
 Used technology:
 
+* Flask micro framework
 * SQLAlchemy
 * CherryPy wsgiserver
 * WTForms
