@@ -1,0 +1,23 @@
+<!doctype html>
+<head>
+
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link type="text/css" rel="stylesheet" href="/static/cyber.css">
+
+<link type="text/css" rel="stylesheet" href="/static/tw.css">
+<link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
+</head>
+<body>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+<cneter>
+    <form action="/user_page/upload/" method=post enctype=multipart/form-data>
+         Название<input type="text" name="name"><br><br>
+	 <label for="ds">Описание</label><textarea name="desc" rows=5 cols=70 id="ds"></textarea><br>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+</center>
+</body>
+</html>

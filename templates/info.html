@@ -1,0 +1,75 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link type="text/css" rel="stylesheet" href="/static/cyber.css">
+<link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
+   <title>dl.odmins-it.ru</title>
+</head>
+<body>
+ <table cellpadding="0" cellspacing="0" width=100%>
+   <tr><td>
+	<font size="+3"><b>DL.</b></font><a href="/"><img src="/static/odmins-full.png" align="middle" border="0"/></a>
+	<p><b>torrent-tracker::INFO</b>
+	<p><b>{{ torrent.filename }} :: [{{ torrent.name }}]</b>
+	</td>
+	
+	 <!-- <a href="/user/logout">выход &gt;&gt;</a> !-->
+	 
+
+    <td align="right">
+	       <form action='/search' method='post'>
+			<!--<input type='text' name='login' class="small_auth">!-->
+			<input type='text' name='login' class="small_auth">
+			<input type='submit' value='поиск' />
+		   </td>
+	</tr>
+    <tr ><td colspan='2' align="right">
+	   <a href="/about">о трекере&nbsp;&nbsp;</a>
+	<br>
+	</td></tr>	
+ </table>
+
+      <center>
+
+<table class='content_box'>
+	<thead>
+	<tr>
+		<td class="header">список файлов</td>
+		<td class="header">размер файлов</td>
+	</tr>
+	</thead>
+      {% if info %}
+       {% if not f_er %}
+        {% for file in info %}
+	<tr class="content">
+		<td class="content">{{ ("/".join(file['path'])).decode("utf8") }}</td>
+		<td class="content">{{ (file["length"]*0.001)*0.001 }} Mb</td>
+	</tr>
+        {% endfor %}
+       {% else %}
+	<tr class="content">
+		<td class="content">{{ (info['info']['name']).decode("utf8") }}</td>
+		<td class="content">{{ (info['info']['length']*0.001)*0.001 }} Mb</td>
+	</tr>
+       {% endif %}
+      {% endif %}
+         <tr><td colspan='2' align="center"><h1><a href="http://dl.odmins-it.ru:81/{{ torrent.filename }}">DOWNLOAD</a></h1>
+         </tr>
+
+</table>
+  <br>
+  
+   </center>
+
+
+   <center>
+<hr>
+     <div class='foot'>powered by <a href="http://flask.pocoo.org/">Flask</a></div>
+     <div class='foot'><br>created by unStatiK</div>
+   </center>	
+</body>
+</html>

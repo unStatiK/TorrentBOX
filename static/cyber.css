@@ -1,0 +1,330 @@
+
+  /*  Global  */
+    body { 
+          background-color: #000000;
+          font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+          font-size: 12pt;
+          color:#00c000;
+         }
+      
+       a {
+           color:#00c000; 
+           text-decoration:none;
+         }
+
+ a:hover {
+           color:#00ff00;  
+         }
+         
+   input {
+           height: 20px;
+           font-size: 14px;
+           font-weight: bold;
+           border: 1px solid #303030;		
+         }
+         
+   thead {
+           font-size: 14pt;
+           background-color:#002000;
+           color: #ffffff;
+           text-align:center
+         }
+         
+      hr {
+      	   color: #ffffff;
+         } 
+         
+           
+      h1 {
+	       font-size: 12pt;
+	 }           
+     	 	
+  select {
+		   font-size: 0.8em; 
+		   background-color:#002000;
+		   color: #ffffff;
+		   border: 0px;
+		   width:100%;
+         }
+		 
+    span {
+	       font-size: 0.8em;
+		   color: #888888;
+	 }	
+	     
+textarea {
+      	   background-color:#002000;
+      	   border: #aaaaaa solid 0px;
+      	   color : #ffffff;
+      	 }      
+     
+    /* main content  */      
+      
+ td.header
+         {
+      	   border: 1px solid #004000; 
+      	 }
+      	   
+tr.content:hover
+         {
+           background-color:#004000;
+         }
+      
+tr.content {
+           border: 1px solid #004000;
+         }
+         
+td.content:hover
+         {
+           background-color:#004000;
+         }
+      
+td.content 
+         {
+           border: 1px solid #004000;
+           text-align: center;
+           font:  bold italic 14px serif;
+         }
+     
+   p.log {
+	 	   font-size: 12pt;
+	     }
+	 	
+table.content_box2
+         {
+                   table-layout:fixed;
+                   word-wrap:break-word;
+		   width:100%; 
+	     } 	 
+
+table.content_box
+         {
+                   table-layout:fixed;
+                   word-wrap:break-word;
+		   width:70%; 
+	     } 	 
+     
+   /*   small auth form   */
+   
+    table.head
+	     {
+   	       padding: 0; 
+           border-spacing: 0;
+           width: 100%;
+   	     }
+ 
+input.small_auth
+         {
+           background-color:#002000;
+           color :#00c000;
+           width: 30%;
+         }
+
+input.small_auth:hover
+         {
+           background-color:#000000;
+         }
+   
+   /*  big auth form  */
+   
+table.b_auth_box
+         {
+   	       width: 60%; 
+   	       margin-left:20%; 
+   	       margin-right:20%;
+   	       height: 300px;
+   	       text-align: center; 
+   	     }
+   	
+ input.b_auth 
+         {
+           background-color:#002000;
+           color :#00c000;
+         }
+      
+input.b_auth:hover
+         {
+           background-color:#004000;
+         }
+      
+  p.error{
+	 	   font-size: 10pt;
+	 	   color :#F10C19;
+	 	 }
+	 	
+	/* big registering form */
+	
+table.b_reg_box
+         {
+		   width: 60%; 
+		   margin-left:20%; 
+		   margin-right:20%;
+   	       height: 200px;
+   	       text-align: center; 
+   	       border: 1px solid #004000;
+         }
+         
+td.reg_left
+         {
+    	   text-align: right;
+    	 }   
+    		
+td.reg_right
+         {
+    	   text-align: left;
+    	 }
+    	    	
+ a.log_in 
+         {
+           font-weight: bold;
+         }
+    
+    /*  admin auth form */
+    
+table.b_ad_auth_box
+         {
+   	       width: 30%; 
+   	       margin-left:35%; 
+   	       margin-right:35%;
+   	       height: 100px;
+   	       text-align: center; 
+   	     }
+
+input.admin_auth
+         {
+   		   background-color:#002000;
+           color :#00c000;
+   	     }
+    
+input.admin_auth:hover
+         {
+           background-color:#004000;
+         }
+    
+   /*  user box */
+     
+   input.mail 
+         {
+           background-color:#002000;
+           color :#00c000;
+         }
+      
+    /* admin page */
+    
+    input.edit_box 
+	     {
+           background-color:#002000;
+           color :#00c000;
+           width: 350pt;
+         }
+    
+div.left, div.right 
+         {
+		   position: absolute;
+		   top: 120px;
+		   width:50%;
+		 }
+
+  div.right 
+         {
+		   left: 50%;
+		 }
+ 
+ div.normal 
+         {
+		   font-size: 1em; 
+		 }
+		
+ input.search 
+         {
+		   background-color:#002000;
+           color :#00c000;
+           width: 40%;
+		 }
+			
+input.search:hover
+         {
+           background-color:#000000;
+         }
+      
+table.list  
+         {  
+		   border-collapse:collapse;
+		 }
+	
+	tr.odd 
+	     {
+		   background-color: #004000;
+		   border: 1px solid #aaaaaa; 
+		 }
+		 
+	td.ls{
+	       border: 1px solid #aaaaaa;
+		   height:30px;
+		 }
+		
+tr.odd:hover
+         {
+           background-color:#005000;
+         }	
+      
+  tr.unodd 
+         {
+		   background-color: #000000;
+		   border: 1px solid #aaaaaa; 
+		 }
+		
+tr.unodd:hover
+         {
+           background-color:#005000;
+         }	
+    	   
+   /* info page */
+   
+table.comment_table
+         {
+		   width: 100%;
+		   border-collapse:collapse;
+		   border: 0;
+	     }
+	
+	td.top 
+	     {
+		   width:26px;
+		   vertical-align: top;
+		   border : 0;
+	     }
+	
+  img.i1 {
+		   height: 24px;
+		   width: 24px;
+	     }
+		 
+td.a_left 
+         {
+		  border-left: 1px solid #002000;
+		  border-bottom:  1px solid #002000;
+		  border-top: 1px solid #002000;
+	     }
+td.a_right
+         {
+		  border-right: 1px solid #002000;
+		  border-bottom:  1px solid #002000;
+		  border-top: 1px solid #002000;
+		 }	  	
+	div.txt 
+	     {
+		   font-size:0.9em;
+		   font-family: "Serif","Arial","Verdana";
+		   width: 100%;
+		   overflow: auto;
+	     }	
+    	    	
+   /*  foot */
+    
+   div.foot 
+         {
+	 	   font-size : 10pt;
+	 	   color : #42D416; 
+	 	   font-weight: bold;
+	 	 }   

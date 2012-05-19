@@ -1,0 +1,97 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link type="text/css" rel="stylesheet" href="/static/cyber.css">
+<link type="text/css" rel="stylesheet" href="/static/tw.css">
+<link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
+   <title>dl.odmins-it.ru</title>
+</head>
+<body>
+ <table cellpadding="0" cellspacing="0" width=100%>
+   <tr><td>
+	<font size="+3"><b>DL.</b></font><a href="/"><img src="/static/odmins-full.png" align="middle" border="0"/></a>
+	<p><b>torrent-tracker::INFO</b>
+	<p><b> :: []</b>
+	</td>
+	
+	 
+
+    <td align="right">
+	       <form action='/search' method='post'>
+			<input type='text' name='login' class="small_auth">
+			<input type='submit' value='поиск' />
+              </form>
+		   </td>
+	</tr>
+    <tr ><td colspan='2' align="right">
+	   <a href="/about">о трекере&nbsp;&nbsp;</a>
+	<br>
+	</td></tr>	
+ </table>
+
+
+  {% if torrent %}
+
+  <div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+
+
+	<div style="border:1px solid #004000;text-align:center;"><h1>tags:</h1></div>
+	<br>
+	<div style="border:1px solid #004000;">
+
+            {% for f in tags %}
+            <br>&nbsp;&bull;{{ f.name }} [ <a href="/user_page/torrent/{{ id_t }}/tag/{{ f.id }}/delete">удалить</a> ]&nbsp;
+           {% endfor %}
+
+	<br><br></div>
+
+    </div>
+    <div class="span10">
+
+	<center>
+           <form action="/user_page/edit/{{ id_t }}/" method="post">
+               <textarea name=f_name rows=5 cols=70>{{ torrent.name }}</textarea><br><br>
+               <textarea name=f_desc rows=5 cols=70>{{ torrent.description }}</textarea><br><br>
+               <input type="submit" value="save" />
+           </form>
+           {% if all_tags %}<br><br>
+           <form action="/user_page/torrent/{{ id_t }}/addtag/" method="POST">
+           <select style="width:50%;" name="tag">
+               {% for f in all_tags %}
+                  <option value={{ f.id }}> {{ f.name }}</option>
+               {% endfor %}
+           </select>
+               <input type="submit" value="add tag" />
+           </form>
+           {% endif %}
+            <br><br>
+            <form action="/user_page/addtag/" method="post">
+               <label for="tag">Новый тег</label>  
+               <input type="text" id="tag" name="newtag">
+               <input type="hidden" name="idt" value={{ id_t }}>
+               <input type="submit" value="add" />
+           </form>
+         </center>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+ {% endif %}
+
+   <center>
+<hr>
+     <div class='foot'>powered by <a href="http://flask.pocoo.org/">Flask</a></div>
+     <div class='foot'><br>created by unStatiK</div>
+   </center>	
+</body>
+</html>
