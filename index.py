@@ -12,13 +12,14 @@ import re, os, time, math
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = '/path/to/torrents/folder/'
+UPLOAD_FOLDER = '/var/www/tracker/torrents/'
 ALLOWED_EXTENSIONS = set(['torrent'])
 
-app.secret_key = '\xfcxb6\xd3\xade\xf2!x'
+app.secret_key = 'r\!\xfc\x91w5\xac%\x8fE\m83\xbfJ\xa5\xed\xd9\x1fy\gbd\x04\xdbX*\xb6\xd3\xade\xf2B\x11'
 
 app.config['DEBUG'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SESSION_COOKIE_DOMAIN'] = 'dl.odmins-it.ru'
 app.config['SESSION_COOKIE_SECURE'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = 0
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
@@ -26,7 +27,7 @@ app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
 cherry = wsgiserver.WSGIPathInfoDispatcher({'/': app})
 server = wsgiserver.CherryPyWSGIServer(('127.0.0.1', 8081), cherry)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://<db_user>:<password>@/<db>'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://tracker_u:tru90@/tracker'
 db = SQLAlchemy(app,False)
 
 tags_links = db.Table('tags_links',db.metadata,
@@ -100,12 +101,16 @@ def tokenize(text, match=re.compile("([idel])|(\d+):|(-?\d+)").match):
 
 def decode_item(next, token):
     if token == "i":
+        # integer: "i" value "e"
         data = int(next())
         if next() != "e":
             raise ValueError
     elif token == "s":
+        # string: "s" value (virtual tokens)
         data = next()
+#        data = data.encode("utf-8")
     elif token == "l" or token == "d":
+        # container: "l" (or "d") values "e"
         data = []
         tok = next()
         while tok != "e":
@@ -121,7 +126,7 @@ def decode(text):
     try:
         src = tokenize(text)
         data = decode_item(src.next, src.next())
-        for token in src:
+        for token in src: # look for more tokens
             raise SyntaxError("trailing junk")
     except (AttributeError, ValueError, StopIteration):
         raise SyntaxError("syntax error")
