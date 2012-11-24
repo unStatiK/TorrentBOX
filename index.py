@@ -4,29 +4,31 @@ from flask import Flask
 from flask import render_template, redirect, request, session
 from flaskext.sqlalchemy import SQLAlchemy
 from wtforms import Form, TextField, PasswordField, validators
-from hashlib import sha1
+from hashlib import sha256
 from cherrypy import wsgiserver
 from sqlalchemy import not_
 from sqlalchemy.orm import relationship
+from itsdangerous import URLSafeTimedSerializer, BadSignature
+from werkzeug.datastructures import CallbackDict
+from flask.sessions import SessionInterface, SessionMixin
 import re, os, time, math
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = '/path/to/torrents/folder/'
+UPLOAD_FOLDER = '/path/to/tracker/'
 ALLOWED_EXTENSIONS = set(['torrent'])
+SALT_PASS = "your_salt_for_password"
 
-app.secret_key = '\xfcxb6\xd3\xade\xf2!x'
+app.secret_key = 'your_secret_app_key'
 
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SESSION_COOKIE_SECURE'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] = 0
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
 
 cherry = wsgiserver.WSGIPathInfoDispatcher({'/': app})
 server = wsgiserver.CherryPyWSGIServer(('127.0.0.1', 8081), cherry)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://<db_user>:<password>@/<db>'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://user:password@host/db'
 db = SQLAlchemy(app,False)
 
 tags_links = db.Table('tags_links',db.metadata,
@@ -84,6 +86,63 @@ class Torrents(db.Model):
 
 
 
+class Webaccounts(db.Model):
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    password = db.Column(db.String(255))
+    phone = db.Column(db.String(255))
+    token = db.Column(db.String(255))
+
+    def __init__(self, password, phone, token):
+        self.password = password
+        self.phone = phone
+        self.token = token
+
+class ItsdangerousSession(CallbackDict, SessionMixin):
+    def __init__(self, initial=None):
+        def on_update(self):
+            self.modified = True
+        CallbackDict.__init__(self, initial, on_update)
+        self.modified = False
+
+
+class ItsdangerousSessionInterface(SessionInterface):
+    salt = 'your_salt_for_session'
+    session_class = ItsdangerousSession
+
+    def get_serializer(self, app):
+        if not app.secret_key:
+            return None
+        return URLSafeTimedSerializer(app.secret_key,salt=self.salt)
+
+    def open_session(self, app, request):
+        s = self.get_serializer(app)
+        if s is None:
+            return None
+        val = request.cookies.get(app.session_cookie_name)
+        if not val:
+            return self.session_class()
+        max_age = app.permanent_session_lifetime.total_seconds()
+        try:
+            data = s.loads(val, max_age=max_age)
+            return self.session_class(data)
+        except BadSignature:
+            return self.session_class()
+
+    def save_session(self, app, session, response):
+        domain = self.get_cookie_domain(app)
+        if not session:
+            if session.modified:
+                response.delete_cookie(app.session_cookie_name,
+                                   domain=domain)
+            return
+        expires = self.get_expiration_time(app, session)
+        val = self.get_serializer(app).dumps(dict(session))
+        response.set_cookie(app.session_cookie_name, val,
+                            expires=expires, httponly=True,
+                            domain=domain)
+
+app.session_interface = ItsdangerousSessionInterface()
+
 
 def tokenize(text, match=re.compile("([idel])|(\d+):|(-?\d+)").match):
     i = 0
@@ -132,8 +191,11 @@ class LoginForm(Form):
     psw = PasswordField('Password', [validators.Length(min=3, max=25)])
 
 def check_login(login,password):
+  password = sha256(password.encode("utf-8")).hexdigest()
+  password = "".join([password,SALT_PASS])
+  password = sha256(password).hexdigest()
   log = db.session.query(Accounts.status).filter_by(name=login.encode("utf-8"),\
-                         psw=sha1(password.encode("utf-8")).hexdigest()).limit(1).first()
+                         psw=password).limit(1).first()
   if log:
         if log[0] != 0:
   		return log[0]
@@ -153,7 +215,7 @@ def check_delete(id_u,id_t):
         return None
 
 def check_admin_session():
-  if 'user' and 'id_u' in session:	
+  if 'user' in session and 'id_u' in session:	
   	tr = db.session.query(Accounts.status).filter_by(id=int(session['id_u'])).limit(1).first()
         if tr:
         	if tr[0] == 2:
@@ -279,7 +341,7 @@ def tag(id_tag):
 
 @app.route('/admin/')
 def admin():
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
                 if check_admin_session():
                 	torrent = db.session.query(Torrents.id,Torrents.filename,Torrents.name).order_by(Torrents.id.desc()).all()
                 	tags = db.session.query(Tags).order_by(Tags.name).all()
@@ -293,7 +355,7 @@ def admin():
 
 @app.route('/admin/tag/edit/<int:id_tag>/', methods=['POST','GET'])
 def tag_edit(id_tag):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
                 if request.method == 'POST':
                 	if 'tag' in request.form :
                         	if check_admin_session():
@@ -320,7 +382,7 @@ def tag_edit(id_tag):
 
 @app.route('/admin/tag/delete/<int:id_tag>/', methods=['POST','GET'])
 def tag_delete(id_tag):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
             if request.method == 'POST':
                 if check_admin_session():
             		if 'f_acp' in request.form and request.form['f_acp'] == "yes":
@@ -340,9 +402,9 @@ def tag_delete(id_tag):
 
 @app.route('/admin/user/edit/<int:id_user>/', methods=['POST','GET'])
 def user_edit(id_user):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
                 if request.method == 'POST':
-                	if 'user' and 'psw' and 'psw_r' in request.form :
+                	if 'user' in request.form and 'psw' in request.form and 'psw_r' in request.form :
                         	if check_admin_session():
 					name = request.form['user']
                         		name = name.strip()
@@ -360,7 +422,10 @@ def user_edit(id_user):
                                         	if psw == psw_r:
                                           		user = db.session.query(Accounts).get(id_user)
                                                         user.name = name
-                                                        user.psw = str(sha1(psw).hexdigest())
+						        password = sha256(psw.encode("utf-8")).hexdigest()
+							password = "".join([password,SALT_PASS])
+							password = sha256(password).hexdigest()
+                                                        user.psw = str(password)
                                                         db.session.commit()
                                		return redirect('/admin/')
 
@@ -376,9 +441,9 @@ def user_edit(id_user):
 
 @app.route('/admin/user/add/', methods=['POST','GET'])
 def user_add():
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
                 if request.method == 'POST':
-                	if 'user' and 'psw' and 'psw_r' in request.form :
+                	if 'user' in request.form and 'psw' in request.form and 'psw_r' in request.form :
                         	if check_admin_session():
 					name = request.form['user']
                         		name = name.strip()
@@ -388,7 +453,10 @@ def user_add():
                         		psw_r = psw_r.strip()
                         		if name != "" and psw != "" and psw_r != "":
                                         	if psw == psw_r:
-                                			user = Accounts(name,str(sha1(psw).hexdigest()),1)
+  							password = sha256(psw.encode("utf-8")).hexdigest()
+  							password = "".join([password,SALT_PASS])
+  							password = sha256(password).hexdigest()
+                                			user = Accounts(name,str(password),1)
                                           		db.session.add(user)
                                                         db.session.commit()
                                 			return redirect('/admin/')
@@ -407,7 +475,7 @@ def user_add():
 
 @app.route('/admin/user/delete/<int:id_user>/', methods=['POST','GET'])
 def user_delete(id_user):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
             if request.method == 'POST':
                 if check_admin_session():
             		if 'f_acp' in request.form and request.form['f_acp'] == "yes":
@@ -429,7 +497,7 @@ def user_delete(id_user):
 
 @app.route('/user_page/')
 def user():
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
                 torrent = db.session.query(Torrents.id,Torrents.filename,Torrents.name).order_by(Torrents.id.desc()).\
                                                                                filter_by(id_acc=session['id_u']).all()
                 if torrent:
@@ -442,9 +510,9 @@ def user():
 
 @app.route('/user_page/addtag/', methods=['POST','GET'])
 def addtag():
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
             if request.method == 'POST':
-                if 'newtag' and 'idt' in request.form :
+                if 'newtag' in request.form and 'idt' in request.form :
                         if re.match('^[0-9]{1,3}$',request.form['idt']):
                         	newtag = request.form['newtag'].strip()
                                 if newtag != "" and len(newtag) <=20:
@@ -465,12 +533,13 @@ def addtag():
 
 @app.route('/user_page/torrent/<int:id_t>/addtag/', methods=['POST','GET'])
 def addtag_torrent(id_t):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
             if request.method == 'POST':
                 if 'tag' in request.form :
                         trs = db.session.query(Torrents).filter_by(id=id_t).first()
-			trs.str_tags = [request.form['tag']]
-			db.session.commit()
+			if trs.id_acc == int(session['id_u']):
+				trs.str_tags = [request.form['tag']]
+				db.session.commit()
             		return redirect("/user_page/edit/" + str(id_t))  
         else:
         	return redirect('/')
@@ -478,7 +547,7 @@ def addtag_torrent(id_t):
 
 @app.route('/user_page/torrent/<int:id_t>/tag/<int:id_tg>/delete/')
 def del_tag(id_t,id_tg):
- if 'user' and 'id_u' in session :
+ if 'user' in session and 'id_u' in session :
  	if not check_admin_session():
         	if not check_change_tag_torrent(session['id_u'],id_t,id_tg):
                 	return redirect("/user_page/")
@@ -493,7 +562,7 @@ def del_tag(id_t,id_tg):
 
 @app.route('/user_page/edit/<int:id_t>/', methods=['POST','GET'])
 def edit(id_t):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
             if request.method == 'POST':
                 if 'f_name' in request.form and 'f_desc' in request.form:
                         f_name = request.form['f_name']
@@ -504,10 +573,11 @@ def edit(id_t):
                         f_desc = f_desc.strip()
                         if f_desc == "":
                         	f_desc = "null"
-			trs = db.session.query(Torrents).get(id_t)
-			trs.name = f_name
-                        trs.description = f_desc
-			db.session.commit()
+			trs = db.session.query(Torrents).filter_by(id=id_t).limit(1).first()
+			if trs.id_acc == int(session['id_u']):
+				trs.name = f_name
+                        	trs.description = f_desc
+				db.session.commit()
             		return redirect("/user_page/")  
             else:
                 torrent = db.session.query(Torrents.name,Torrents.description).filter_by(id=id_t).limit(1).first()
@@ -523,7 +593,7 @@ def edit(id_t):
 
 @app.route('/user_page/delete/<int:id_t>/', methods=['POST','GET'])
 def delete(id_t):
-        if 'user' and 'id_u' in session :
+        if 'user' in session and 'id_u' in session :
             if request.method == 'POST':
             	if 'f_acp' in request.form and request.form['f_acp'] == "yes":
                         if check_delete(session['id_u'],id_t):
@@ -543,8 +613,8 @@ def delete(id_t):
 @app.route('/user_page/upload/', methods = ['POST','GET'])
 def upload():
 	if request.method == 'POST':
-                if 'user' and 'id_u' not in session:  
-                	if 'name' and 'desc' not in request.form:
+                if 'user' not in session and 'id_u' not in session:  
+                	if 'name' not in request.form and 'desc' not in request.form:
         			return redirect('/')
         	file = request.files['file']
         	if file and allowed_file(file.filename):
