@@ -15,7 +15,7 @@ import re, os, time, math
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = '/path/to/tracker/'
+UPLOAD_FOLDER = '/path/to/torrents/folder/'
 ALLOWED_EXTENSIONS = set(['torrent'])
 SALT_PASS = "your_salt_for_password"
 
