@@ -10,6 +10,7 @@ from sqlalchemy import not_
 from sqlalchemy.orm import relationship
 from itsdangerous import URLSafeTimedSerializer, BadSignature
 from werkzeug.datastructures import CallbackDict
+from werkzeug import secure_filename
 from flask.sessions import SessionInterface, SessionMixin
 import re, os, time, math
 
@@ -617,7 +618,8 @@ def upload():
                 	if 'name' not in request.form and 'desc' not in request.form:
         			return redirect('/')
         	file = request.files['file']
-        	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+        	if file and allowed_file(filename):
                         m = time.time()
                         uniqid = '%4x%05x' %(math.floor(m),(m-math.floor(m))*1000000)
             		filename = uniqid + ".torrent"
