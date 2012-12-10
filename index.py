@@ -339,6 +339,30 @@ def tag(id_tag):
 
 	return render_template('tag.html',torrents=torrents)
 
+@app.route('/search/', methods=['GET','POST'])
+def search():
+        if request.method == 'POST':
+                if 'srch' in request.form:
+                        str_srch = request.form['srch'].strip()
+                        if str_srch != "":
+                                str_srch = "".join(['%',str_srch,'%'])
+                                t_by_name = db.session.query(Torrents).filter(Torrents.name.like(str_srch)).all()
+                                arr_id = []
+                                for sub_t in t_by_name:
+                                        arr_id.append(sub_t.id)
+                                if len(arr_id) > 0:
+                                        t_by_desc = db.session.query(Torrents).filter(not_(Torrents.id.in_(arr_id)),Torrents.description.like(str_srch)).all()
+                                else:
+                                        t_by_desc = db.session.query(Torrents).filter(Torrents.description.like(str_srch)).all()
+                                return render_template('search.html',t_name=t_by_name,t_desc=t_by_desc)
+                        else:
+                                return render_template('search.html')
+
+                else:
+                        return redirect('/')
+        else:
+                return redirect('/')
+
 
 @app.route('/admin/')
 def admin():
