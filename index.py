@@ -2,7 +2,7 @@
 
 from flask import Flask
 from flask import render_template, redirect, request, session
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 from wtforms import Form, TextField, PasswordField, validators
 from hashlib import sha256
 from cherrypy import wsgiserver
