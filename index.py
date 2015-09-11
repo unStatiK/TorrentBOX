@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from tornado.wsgi import WSGIContainer
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
 from flask import Flask
 from flask import render_template, redirect, request, session
 from flask.ext.sqlalchemy import SQLAlchemy
 from wtforms import Form, TextField, PasswordField, validators
 from hashlib import sha256
-from cherrypy import wsgiserver
 from sqlalchemy import not_
 from sqlalchemy.orm import relationship
 from itsdangerous import URLSafeTimedSerializer, BadSignature
@@ -25,9 +27,6 @@ app.secret_key = 'your_secret_app_key'
 app.config['DEBUG'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
-
-cherry = wsgiserver.WSGIPathInfoDispatcher({'/': app})
-server = wsgiserver.CherryPyWSGIServer(('127.0.0.1', 8081), cherry)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://user:password@host/db'
 db = SQLAlchemy(app,False)
@@ -705,10 +704,9 @@ def not_found(error):
 #	return redirect('/')
 
 if __name__ == '__main__':
-	try:
-		server.start()
-	except KeyboardInterrupt:
-		server.stop()
+	http_server = HTTPServer(WSGIContainer(app))
+	http_server.listen(8080)
+	IOLoop.instance().start()
 
 
 
