@@ -307,7 +307,9 @@ def delete(id_torrent):
                     if check_allow_torrent_delete(user_id, id_torrent):
                         filename = get_torrent_filename(id_torrent)
                         if filename:
-                            os.remove(app.config['UPLOAD_FOLDER'] + filename)
+                            file_path = app.config['UPLOAD_FOLDER'] + filename
+                            if os.path.exists(file_path):
+                                os.remove(file_path)
                         delete_torrent(id_torrent)
             return redirect("/user_page/")
         else:
