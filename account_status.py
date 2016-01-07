@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+
+BANNED_ACCOUNT = 0
+USER_ACCOUNT = 1
+ADMIN_ACCOUNT = 2

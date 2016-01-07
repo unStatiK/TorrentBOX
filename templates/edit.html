@@ -8,7 +8,7 @@
 <link type="text/css" rel="stylesheet" href="/static/cyber.css">
 <link type="text/css" rel="stylesheet" href="/static/tw.css">
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
-   <title>dl.odmins-it.ru</title>
+   <title>TorrentBOX</title>
 </head>
 <body>
  <table cellpadding="0" cellspacing="0" width=100%>
@@ -19,7 +19,8 @@
 	 
 
     <td align="right">
-	       <form action='/search' method='post'>
+	       <form action='/search/' method='post'>
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<input type='text' name='login' class="small_auth">
 			<input type='submit' value='поиск' />
               </form>
@@ -43,8 +44,8 @@
 	<br>
 	<div style="border:1px solid #004000;">
 
-            {% for f in tags %}
-            <br>&nbsp;&bull;{{ f.name }} [ <a href="/user_page/torrent/{{ id_t }}/tag/{{ f.id }}/delete">удалить</a> ]&nbsp;
+            {% for tag in tags %}
+            <br>&nbsp;&bull;{{ tag.name }} [ <a href="/user_page/torrent/{{ torrent_id }}/tag/{{ tag.id }}/delete">удалить</a> ]&nbsp;
            {% endfor %}
 
 	<br><br></div>
@@ -53,16 +54,18 @@
     <div class="span10">
 
 	<center>
-           <form action="/user_page/edit/{{ id_t }}/" method="post">
-               <textarea name=f_name rows=5 cols=70>{{ torrent.name }}</textarea><br><br>
-               <textarea name=f_desc rows=5 cols=70>{{ torrent.description }}</textarea><br><br>
+           <form action="/user_page/edit/{{ torrent_id }}/" method="post">
+               <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+               <textarea name=file_name rows=5 cols=70>{{ torrent.name }}</textarea><br><br>
+               <textarea name=file_desc rows=5 cols=70>{{ torrent.description }}</textarea><br><br>
                <input type="submit" value="save" />
            </form>
            {% if all_tags %}<br><br>
-           <form action="/user_page/torrent/{{ id_t }}/addtag/" method="POST">
+           <form action="/user_page/torrent/{{ torrent_id }}/addtag/" method="POST">
+           <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
            <select style="width:50%;" name="tag">
-               {% for f in all_tags %}
-                  <option value={{ f.id }}> {{ f.name }}</option>
+               {% for tag in all_tags %}
+                  <option value={{ tag.id }}> {{ tag.name }}</option>
                {% endfor %}
            </select>
                <input type="submit" value="add tag" />
@@ -70,9 +73,10 @@
            {% endif %}
             <br><br>
             <form action="/user_page/addtag/" method="post">
+               <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                <label for="tag">Новый тег</label>  
                <input type="text" id="tag" name="newtag">
-               <input type="hidden" name="idt" value={{ id_t }}>
+               <input type="hidden" name="torrent_id" value={{ torrent_id }}>
                <input type="submit" value="add" />
            </form>
          </center>

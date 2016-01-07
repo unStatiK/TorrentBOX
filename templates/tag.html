@@ -5,7 +5,7 @@
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link type="text/css" rel="stylesheet" href="/static/cyber.css">
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
-   <title>dl.odmins-it.ru</title>
+   <title>TorrentBOX</title>
 </head>
 <body>
  <table cellpadding="0" cellspacing="0" width=100%>
@@ -18,7 +18,8 @@
 
     <td align="right">
 	       <form action='/search/' method='post'>
-			<input type='text' name='srch' class="small_auth">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+			<input type='text' name='pattern' class="small_auth">
 			<input type='submit' value='поиск' />
 		   </td>
 	</tr>
@@ -46,7 +47,7 @@
 		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.name }}</a></td>
 		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.description }}</a></td>
 		<td class="content">{{ torrent.size }} Mb</td>
-        <td class="content"><a href='http://dl.odmins-it.ru:81/{{ torrent.filename }}'>&gt;&gt;&gt;</a></td>
+        <td class="content"><a href='http://TorrentBOX:81/{{ torrent.filename }}'>&gt;&gt;&gt;</a></td>
 	</tr>
         {% endfor %}
 </table>

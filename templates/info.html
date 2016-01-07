@@ -7,7 +7,7 @@
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link type="text/css" rel="stylesheet" href="/static/cyber.css">
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
-   <title>dl.odmins-it.ru</title>
+   <title>TorrentBOX</title>
 </head>
 <body>
  <table cellpadding="0" cellspacing="0" width=100%>
@@ -21,7 +21,8 @@
 
     <td align="right">
 	       <form action='/search/' method='post'>
-			<input type='text' name='srch' class="small_auth">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+			<input type='text' name='pattern' class="small_auth">
 			<input type='submit' value='поиск' />
 		   </td>
 	</tr>
@@ -41,7 +42,7 @@
 	</tr>
 	</thead>
       {% if info %}
-       {% if not f_er %}
+       {% if not error %}
         {% for file in info %}
 	<tr class="content">
 		<td class="content">{{ ("/".join(file['path'])).decode("utf8") }}</td>
@@ -55,16 +56,12 @@
 	</tr>
        {% endif %}
       {% endif %}
-         <tr><td colspan='2' align="center"><h1><a href="http://dl.odmins-it.ru:81/{{ torrent.filename }}">DOWNLOAD</a></h1>
+
+        <!-- todo fix url -->
+         <tr><td colspan='2' align="center"><h1><a href="http://TorrentBOX:81/{{ torrent.filename }}">DOWNLOAD</a></h1>
          </tr>
 
 </table>
-  <br>
-  
-   </center>
-
-
-   <center>
 <hr>
      <div class='foot'>powered by <a href="http://flask.pocoo.org/">Flask</a></div>
      <div class='foot'><br>created by unStatiK</div>

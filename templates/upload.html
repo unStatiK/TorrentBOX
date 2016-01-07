@@ -12,7 +12,8 @@
     <title>Upload new File</title>
     <h1>Upload new File</h1>
 <cneter>
-    <form action="/user_page/upload/" method=post enctype=multipart/form-data>
+    <form action="/user_page/upload/" method="post" enctype="multipart/form-data">
+     <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
          Название<input type="text" name="name"><br><br>
 	 <label for="ds">Описание</label><textarea name="desc" rows=5 cols=70 id="ds"></textarea><br>
       <p><input type=file name=file>

@@ -6,20 +6,21 @@
 <link type="text/css" rel="stylesheet" href="/static/tw.css">
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
 
-   <title>dl.odmins-it.ru</title>
+   <title>TorrentBOX</title>
 </head>
 <body>
  <table cellpadding="0" cellspacing="0" width=100%>
    <tr><td>
-	<p><b>torrent-box</b> [ R1 ]
+	<p><b>torrent-box</b> [ RC1 ]
 	</td>
-		 
+
 
     <td align="right">
 	       <form action='/search/' method='post'>
-			<input type='text' name='srch' class="small_auth">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+			<input type='text' name='pattern' class="small_auth">
 			<input type='submit' value='поиск' />
-		   </td>
+    </td>
 	</tr>
     <tr ><td colspan='2' align="right">
 	   <a href="/about">о трекере&nbsp;&nbsp;</a>
@@ -31,7 +32,7 @@
  	   <a href="/logout">выход&nbsp;&nbsp;</a>
            {% endif %}
 	<br>
-	</td></tr>	
+	</td></tr>
  </table>
 
 <br>
@@ -41,16 +42,16 @@
     <div class="span2">
 
 
-     {% if tgs %}	
+     {% if tags %}
 	<div style="border:1px solid #004000;text-align:center;"><h1>tags:</h1></div>
 	<br>
 	<div style="border:1px solid #004000;">
-        {% for tags in tgs %}
+        {% for tags in tags %}
 	<br>&nbsp;&bull;<a href="/tag/{{ tags.id }}">{{ tags.name }}</a>&nbsp;
         {% endfor %}
 	<br><br></div>
 	<br><br>
-     {%  endif %}	
+     {%  endif %}
 
     </div>
 
@@ -59,7 +60,7 @@
 
       <center>
 
-{% if trs and ath %}
+{% if torrents and authors %}
 <table class='content_box2'>
 	<thead>
 	<tr>
@@ -67,34 +68,34 @@
 		<td class="header">описание</td>
 		<td class="header">автор раздачи</td>
 		<td class="header">размер раздачи</td>
-		<td class="header">download</td>	
+		<td class="header">download</td>
 	</tr>
 	</thead>
         {% set j = 0 %}
-        {% for torrent in trs %}
+        {% for torrent in torrents %}
 	<tr class="content">
 		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.name }}</a></td>
 		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.description }}</a></td>
-		<td class="content">{{ ath[j] }}</td>
+		<td class="content">{{ authors[torrent.id] }}</td>
 		<td class="content">{{ torrent.size }} Mb</td>
-        <td class="content"><a href='http://dl.odmins-it.ru:81/{{ torrent.filename }}'>&gt;&gt;&gt;</a></td>
+        <td class="content"><a href='http://TorrentBOX:81/{{ torrent.filename }}'>&gt;&gt;&gt;</a></td>
 	</tr>
         {% set j = j + 1 %}
         {% endfor %}
-	<tr><td colspan='5' align="center"><br>общий размер торрентов : {{ size }} Gb<br>Всего торрентов : {{ num }}<br><br>
-		&larr; 
-                  {% for i in range(0,pages) %}
-                    {% if (i+1) == page %} 
-                     [ <a href="?page={{ i + 1 }}">{{ i + 1 }}</a> ]
+	<tr><td colspan='5' align="center"><br>общий размер торрентов : {{ size }} Gb<br>Всего торрентов : {{ count }}<br><br>
+		&larr;
+                  {% for i in range(1,pages + 1) %}
+                    {% if i == page %}
+                     [ <a href="?page={{ i }}">{{ i }}</a> ]
                     {% else %}
-                     <a href="?page={{ i + 1 }}">{{ i + 1 }}</a>
+                     <a href="?page={{ i }}">{{ i }}</a>
                     {% endif %}
                   {% endfor %}
                 &rarr;</td>
 	</tr>
 </table>
 {% endif %}
-  <br>  
+  <br>
    </center>
 
 
@@ -107,7 +108,7 @@
      <div class='foot'>powered by <a href="http://flask.pocoo.org/">Flask</a></div>
      <div class='foot'><br>created by unStatiK</div>
      <div style="font-size:0.6em;">theme <a style="text-decoration:underline;" href="/static/cyber.css">cyber</a></div>
-   </center>	
+   </center>
 
 
 

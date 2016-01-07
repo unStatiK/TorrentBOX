@@ -5,7 +5,7 @@
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link type="text/css" rel="stylesheet" href="/static/cyber.css">
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
-   <title>dl.odmins-it.ru</title>
+   <title>TorrentBOX</title>
 </head>
 <body>
  <table cellpadding="0" cellspacing="0" width=100%>
@@ -18,7 +18,8 @@
 
     <td align="right">
 	       <form action='/search/' method='post'>
-			<input type='text' name='srch' class="small_auth">
+            <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+			<input type='text' name='pattern' class="small_auth">
 			<input type='submit' value='поиск' />
 		   </td>
 	</tr>
@@ -31,7 +32,7 @@
 
    <center>
 
-{% if t_name or t_desc %}
+{% if torrents %}
 <table class='content_box'>
 	<thead>
 	<tr>
@@ -41,34 +42,18 @@
 		<td class="header">download</td>	
 	</tr>
 	</thead>
-	{% if t_name %}
-        {% for var_name in t_name %}
+        {% for item in torrents %}
 	<tr class="content">
-		<td class="content"><a href="/info/{{ var_name.id }}">{{ var_name.name }}</a></td>
-		<td class="content"><a href="/info/{{ var_name.id }}">{{ var_name.description }}</a></td>
-		<td class="content">{{ var_name.size }} Mb</td>
-        <td class="content"><a href='http://dl.odmins-it.ru:81/{{ var_name.filename }}'>&gt;&gt;&gt;</a></td>
+		<td class="content"><a href="/info/{{ item.id }}">{{ item.name }}</a></td>
+		<td class="content"><a href="/info/{{ item.id }}">{{ item.description }}</a></td>
+		<td class="content">{{ item.size }} Mb</td>
+
+        <!-- todo fix urls -->
+        <td class="content"><a href='http://TorrentBOX:81/{{ item.filename }}'>&gt;&gt;&gt;</a></td>
 	</tr>
         {% endfor %}
-	{% endif %}
-	{% if t_desc %}
-        	{% for var_desc_s in t_desc %}
-	<tr class="content">
-		<td class="content"><a href="/info/{{ var_desc_s.id }}">{{ var_desc_s.name }}</a></td>
-		<td class="content"><a href="/info/{{ var_desc_s.id }}">{{ var_desc_s.description }}</a></td>
-		<td class="content">{{ var_desc_s.size }} Mb</td>
-        <td class="content"><a href='http://dl.odmins-it.ru:81/{{ var_desc_s.filename }}'>&gt;&gt;&gt;</a></td>
-	</tr>
-        	{% endfor %}
-	{% endif %}
 </table>
 {% endif %}
-  <br>
-  
-   </center>
-
-
-   <center>
 <hr>
      <div class='foot'>powered by <a href="http://flask.pocoo.org/">Flask</a></div>
      <div class='foot'><br>created by unStatiK</div>
