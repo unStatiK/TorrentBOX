@@ -34,6 +34,7 @@
 				<td>Password: </td><td><input type='password' name='password' class='admin_auth'></td>
 			</tr>
 			<tr>
+                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 				<td class='r'>&nbsp;</td><td class='r'><input type='submit' value='Login'></td>
 			</tr>
 		</table>
