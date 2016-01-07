@@ -6,7 +6,7 @@ Used technology:
 
 * Flask micro framework
 * SQLAlchemy
-* CherryPy wsgiserver
+* Tornado http server
 * WTForms
 etc...
 
