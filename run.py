@@ -383,14 +383,14 @@ def info(id_torrent):
 
 @app.errorhandler(404)
 def not_found(error):
-    return redirect('/')
+    if not app.config['DEBUG']:
+        return redirect('/')
 
 
-# todo rewrite into decorator
-# if not app.config['DEBUG']:
-#    @app.errorhandler(500)
-#    def server_error(error):
-#        return redirect('/')
+@app.errorhandler(500)
+def server_error(error):
+    if not app.config['DEBUG']:
+        return redirect('/')
 
 if __name__ == '__main__':
     http_server = HTTPServer(WSGIContainer(app))
