@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from hashlib import sha256
+
 from flask import session
 from sqlalchemy import not_
 from account_status import BANNED_ACCOUNT, ADMIN_ACCOUNT, USER_ACCOUNT
-from main import SALT_PASS, db
+from main import db
 from models import Accounts
 from session_keys import USER_TOKEN, USER_ID_TOKEN
+from utils import generate_password_hash
 
 
 def check_login(login, password):
     if login and password:
-        password = sha256(password.encode("utf-8")).hexdigest()
-        password = "".join([password, SALT_PASS])
-        password = sha256(password).hexdigest()
+        password = generate_password_hash(password)
         account = db.session.query(Accounts.status).filter_by(name=login.encode("utf-8"), password=password).limit(
                 1).first()
         if account:
@@ -52,17 +51,13 @@ def update_account(user_id, name, password):
     if account:
         account.name = name
         if password != "":
-            password = sha256(password.encode("utf-8")).hexdigest()
-            password = "".join([password, SALT_PASS])
-            password = sha256(password).hexdigest()
+            password = generate_password_hash(password)
             account.password = str(password)
         db.session.commit()
 
 
 def add_account(name, password):
-    password = sha256(password.encode("utf-8")).hexdigest()
-    password = "".join([password, SALT_PASS])
-    password = sha256(password).hexdigest()
+    password = generate_password_hash(password)
     user = Accounts(name, str(password), USER_ACCOUNT)
     db.session.add(user)
     db.session.commit()
