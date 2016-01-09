@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 from db_accounts_utils import *
 from db_torrents_utils import *
-from main import app
+from main import app, APP_HOST, APP_PORT
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
 from torrent_utils import allowed_file, decode
@@ -396,5 +396,5 @@ def server_error(error):
 
 if __name__ == '__main__':
     http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(8080)
+    http_server.listen(APP_PORT, APP_HOST)
     IOLoop.instance().start()

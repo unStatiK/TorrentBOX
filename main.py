@@ -6,21 +6,21 @@ from session import ItsdangerousSessionInterface
 
 app = Flask(__name__)
 
-# UPLOAD_FOLDER = '/path/to/torrents/folder/'
-UPLOAD_FOLDER = '/tmp/'
-ALLOWED_EXTENSIONS = {'torrent'}
+####### Edit this options ###########################
+UPLOAD_FOLDER = '/path/to/torrents/folder/'
 SALT_PASS = "your_salt_for_password"
 PAGE_TORRENT_COUNT = 20
-
+APP_HOST = "127.0.0.1"
+APP_PORT = 8080
 app.secret_key = 'your_secret_app_key'
+#####################################################
 
-#app.config['DEBUG'] = False
-app.config['DEBUG'] = True
+ALLOWED_EXTENSIONS = {'torrent'}
+
+app.config['DEBUG'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://user:password@host/db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:117@127.0.0.1/box'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://user:password@host/db'
 db = SQLAlchemy(app, False)
 
 app.session_interface = ItsdangerousSessionInterface()
