@@ -4,12 +4,12 @@ from hashlib import sha256
 import time
 import math
 
-from main import SALT_PASS
+from main import PASSWORD_SALT
 
 
 def generate_password_hash(password):
     password = sha256(password.encode("utf-8")).hexdigest()
-    password = "".join([password, SALT_PASS])
+    password = "".join([password, PASSWORD_SALT])
     return sha256(password).hexdigest()
 
 

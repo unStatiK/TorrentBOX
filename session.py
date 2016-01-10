@@ -5,6 +5,8 @@ from werkzeug.datastructures import CallbackDict
 from itsdangerous import URLSafeTimedSerializer, BadSignature
 from wtforms import Form, PasswordField, validators, StringField
 
+from main import SESSION_SALT
+
 
 class ItsdangerousSession(CallbackDict, SessionMixin):
     def __init__(self, initial=None):
@@ -16,7 +18,7 @@ class ItsdangerousSession(CallbackDict, SessionMixin):
 
 
 class ItsdangerousSessionInterface(SessionInterface):
-    salt = 'your_salt_for_session'
+    salt = SESSION_SALT
     session_class = ItsdangerousSession
 
     def get_serializer(self, app):

@@ -8,9 +8,10 @@ app = Flask(__name__)
 
 ####### Edit this options ###########################
 UPLOAD_FOLDER = '/path/to/torrents/folder/'
-SALT_PASS = "your_salt_for_password"
+PASSWORD_SALT = 'your_salt_for_password'
+SESSION_SALT = 'your_salt_for_session'
 PAGE_TORRENT_COUNT = 20
-APP_HOST = "127.0.0.1"
+APP_HOST = '127.0.0.1'
 APP_PORT = 8080
 app.secret_key = 'your_secret_app_key'
 #####################################################
