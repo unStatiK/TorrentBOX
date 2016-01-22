@@ -21,7 +21,11 @@ Tested work on PyPy 1.8, 1.9, 2.0 beta 1
 
 # Installation
 
-* Install all dependencies
+* System package dependencies
+  - libpq-dev
+  - python-dev    
+
+* Install all python dependencies
 
  pip install -r requirements.txt
 
