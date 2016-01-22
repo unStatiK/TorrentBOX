@@ -165,37 +165,35 @@ def tag_delete(id_tag):
 def user_edit(id_user):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
-            if USER_TOKEN in request.form and 'password' in request.form and 'rePassword' in request.form:
+            if USER_TOKEN in request.form and 'password' in request.form and 're_password' in request.form:
                 if check_admin_session():
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
-                    rePassword = request.form['rePassword'].strip()
+                    re_password = request.form['re_password'].strip()
                     if name == "":
                         return redirect('/admin/')
-                    if password == "" and rePassword == "":
+                    if password == re_password:
                         update_account(id_user, name, password)
-                    elif password != "" and rePassword != "":
-                        if password == rePassword:
-                            update_account(id_user, name, password)
                     return redirect('/admin/')
 
         else:
             if check_admin_session():
-                user = get_account(id_user)
-                return render_template('user_edit.html', user=user)
+                user_context = get_account(id_user)
+                return render_template('user_edit.html', user=user_context)
+    return redirect('/')
 
 
 @app.route('/admin/user/add/', methods=['POST', 'GET'])
 def user_add():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
-            if USER_TOKEN in request.form and 'password' in request.form and 'rePassword' in request.form:
+            if USER_TOKEN in request.form and 'password' in request.form and 're_password' in request.form:
                 if check_admin_session():
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
-                    rePassword = request.form['rePassword'].strip()
-                    if name != "" and password != "" and rePassword != "":
-                        if password == rePassword:
+                    re_password = request.form['re_password'].strip()
+                    if name != "" and password != "" and re_password != "":
+                        if password == re_password:
                             add_account(name, password)
                     return redirect('/admin/')
         else:
