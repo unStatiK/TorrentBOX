@@ -6,9 +6,9 @@ from torrent_utils import decode
 from utils import uniqid
 
 
-def upload_torrent_file(name, description, file_context, filename):
-    if name != "" and description and filename != "" and isinstance(session[USER_ID_TOKEN], int):
-        if os.path.exists(app.config['UPLOAD_FOLDER'] + filename):
+def upload_torrent_file(name, description, file_context, filename, user_id):
+    if name != "" and description and filename != "":
+        if os.path.exists(app.config['UPLOAD_FOLDER']):
             uid = uniqid()
             filename = "".join([uid, ".torrent"])
             file_context.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -25,7 +25,7 @@ def upload_torrent_file(name, description, file_context, filename):
                     except KeyError:
                         size = torrent_["info"]["length"]
                     size = round((size * 0.001) * 0.001, 2)
-                    add_torrent(name, description, filename, session[USER_ID_TOKEN], size)
+                    add_torrent(name, description, filename, user_id, size)
             except IOError:
                 return
 

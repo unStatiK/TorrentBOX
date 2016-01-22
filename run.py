@@ -312,7 +312,7 @@ def delete(id_torrent):
 
 @app.route('/user_page/upload/', methods=['POST', 'GET'])
 def upload():
-    if USER_TOKEN not in session and USER_ID_TOKEN not in session:
+    if USER_TOKEN not in session and USER_ID_TOKEN not in session and not isinstance(session[USER_ID_TOKEN], int):
         return redirect('/')
 
     if request.method == 'POST':
@@ -322,11 +322,12 @@ def upload():
             description = request.form['desc'].strip()
             file_context = request.files['file']
             filename = secure_filename(file_context.filename)
+            user_id = session[USER_ID_TOKEN]
 
             if file_context and allowed_file(filename):
                 uid = uniqid()
                 filename = "".join([uid, ".torrent"])
-                upload_torrent_file(name, description, file_context, filename)
+                upload_torrent_file(name, description, file_context, filename, user_id)
                 return redirect('/user_page/')
     return render_template('upload.html')
 
