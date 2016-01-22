@@ -35,7 +35,7 @@ Tested work on PyPy 1.8, 1.9, 2.0 beta 1
 
 * Create database and run sql script
 
- psql -u db_user -h db_host db_name < sql/create_pg.sql
+ psql -U db_user -h db_host db_name < sql/create_pg.sql
 
 * Generate admin account
 
@@ -43,11 +43,13 @@ Tested work on PyPy 1.8, 1.9, 2.0 beta 1
 
 * Insert admin account into db
 
- psql -u db_user -h db_host db_name < /tmp/create_admin.sql
+ psql -U db_user -h db_host db_name < /tmp/create_admin.sql
 
 * Run it!
 
  python run.py
+ 
+ open http://localhost:8080/ for profit!
 
 
 
