@@ -14,6 +14,7 @@ PAGE_TORRENT_COUNT = 20
 APP_HOST = '127.0.0.1'
 APP_PORT = 8080
 app.secret_key = 'your_secret_app_key'
+DB_URI = 'postgresql+psycopg2://user:password@host/db'
 #####################################################
 
 ALLOWED_EXTENSIONS = {'torrent'}
@@ -21,7 +22,7 @@ ALLOWED_EXTENSIONS = {'torrent'}
 app.config['DEBUG'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://user:password@host/db'
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app, False)
 
