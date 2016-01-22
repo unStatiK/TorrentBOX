@@ -38,7 +38,7 @@ def get_id_login(login):
 
 
 def get_all_users():
-    return db.session.query(Accounts).filter(not_(Accounts.id == session[USER_ID_TOKEN])) \
+    return db.session.query(Accounts).filter(not_(Accounts.id == int(session[USER_ID_TOKEN]))) \
         .order_by(Accounts.name).all()
 
 

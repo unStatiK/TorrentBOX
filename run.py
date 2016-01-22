@@ -86,7 +86,7 @@ def login():
         form = LoginForm(request.form)
         if form.validate() and check_login(form.login.data, form.password.data):
             session[USER_TOKEN] = form.login.data
-            session[USER_ID_TOKEN] = get_id_login(form.login.data)
+            session[USER_ID_TOKEN] = int(get_id_login(form.login.data))
             return redirect('/user_page/')
         else:
             session.pop(USER_TOKEN, None)
