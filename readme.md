@@ -45,6 +45,8 @@ Tested work on PyPy 1.8, 1.9, 2.0 beta 1
 
  psql -U db_user -h db_host db_name < /tmp/create_admin.sql
 
+* Configure option in main.py
+
 * Run it!
 
  python run.py
