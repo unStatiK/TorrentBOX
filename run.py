@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 from db_accounts_utils import *
 from db_torrents_utils import *
-from helpers import torrent_full_delete
+from helpers import torrent_full_delete, upload_torrent_file
 from main import app, APP_HOST, APP_PORT
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
@@ -313,45 +313,22 @@ def delete(id_torrent):
 
 @app.route('/user_page/upload/', methods=['POST', 'GET'])
 def upload():
+    if USER_TOKEN not in session and USER_ID_TOKEN not in session:
+        return redirect('/')
+
     if request.method == 'POST':
-        if USER_TOKEN not in session and USER_ID_TOKEN not in session:
-            if 'name' not in request.form and 'desc' not in request.form:
-                return redirect('/')
-        file_context = request.files['file']
-        filename = secure_filename(file_context.filename)
+        if 'name' in request.form and 'desc' in request.form:
 
-        if file_context and allowed_file(filename):
+            name = request.form['name'].strip()
+            description = request.form['desc'].strip()
+            file_context = request.files['file']
+            filename = secure_filename(file_context.filename)
 
-            uid = uniqid()
-            filename = "".join([uid, ".torrent"])
-
-            # todo check this behavior
-            while os.path.exists(app.config['UPLOAD_FOLDER'] + filename):
+            if file_context and allowed_file(filename):
                 uid = uniqid()
                 filename = "".join([uid, ".torrent"])
-            file_context.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            try:
-                data = open(app.config['UPLOAD_FOLDER'] + filename, "rb").read()
-            except IOError:
-                return redirect('/')
-            if data:
-                torrent_ = decode(data)
-                size = 0
-                try:
-                    info = torrent_["info"]["files"]
-                    for file_context in info:
-                        size = size + file_context["length"]
-                    size = round((size * 0.001) * 0.001, 2)
-                except KeyError:
-                    size = torrent_["info"]["length"]
-                    size = round((size * 0.001) * 0.001, 2)
-
-                # todo check args
-                if request.form['name'] != "" and request.form['desc'] and filename != "" \
-                        and isinstance(session[USER_ID_TOKEN], int):
-                    add_torrent(request.form['name'], request.form['desc'], filename, int(session[USER_ID_TOKEN]), size)
-            return redirect('/user_page/')
+                upload_torrent_file(name, description, file_context, filename)
+                return redirect('/user_page/')
     return render_template('upload.html')
 
 
@@ -387,6 +364,7 @@ def not_found(error):
 def server_error(error):
     if not app.config['DEBUG']:
         return redirect('/')
+
 
 if __name__ == '__main__':
     http_server = HTTPServer(WSGIContainer(app))

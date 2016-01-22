@@ -1,7 +1,33 @@
 import os
 
-from db_torrents_utils import get_torrent_filename, delete_torrent
+from db_torrents_utils import get_torrent_filename, delete_torrent, add_torrent
 from main import app
+from torrent_utils import decode
+from utils import uniqid
+
+
+def upload_torrent_file(name, description, file_context, filename):
+    if name != "" and description and filename != "" and isinstance(session[USER_ID_TOKEN], int):
+        if os.path.exists(app.config['UPLOAD_FOLDER'] + filename):
+            uid = uniqid()
+            filename = "".join([uid, ".torrent"])
+            file_context.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            try:
+                data = open(app.config['UPLOAD_FOLDER'] + filename, "rb").read()
+                if data:
+                    torrent_ = decode(data)
+                    size = 0
+                    try:
+                        info = torrent_["info"]["files"]
+                        for file_context in info:
+                            size = size + file_context["length"]
+                    except KeyError:
+                        size = torrent_["info"]["length"]
+                    size = round((size * 0.001) * 0.001, 2)
+                    add_torrent(name, description, filename, session[USER_ID_TOKEN], size)
+            except IOError:
+                return
 
 
 def torrent_full_delete(id_torrent):
