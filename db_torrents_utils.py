@@ -39,9 +39,7 @@ def get_torrents_pages_count():
 
 
 def fetch_torrents_page(page):
-    torrents_page = {}
-    torrents_page['items'] = []
-    torrents_page['owners'] = []
+    torrents_page = {'items': [], 'owners': []}
 
     try:
         page = int(page)
