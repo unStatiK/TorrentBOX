@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 
 from db_accounts_utils import *
 from db_torrents_utils import *
+from helpers import torrent_full_delete
 from main import app, APP_HOST, APP_PORT
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
@@ -303,12 +304,7 @@ def delete(id_torrent):
                 if isinstance(session[USER_ID_TOKEN], int):
                     user_id = int(session[USER_ID_TOKEN])
                     if check_allow_torrent_delete(user_id, id_torrent):
-                        filename = get_torrent_filename(id_torrent)
-                        if filename:
-                            file_path = app.config['UPLOAD_FOLDER'] + filename
-                            if os.path.exists(file_path):
-                                os.remove(file_path)
-                        delete_torrent(id_torrent)
+                        torrent_full_delete(id_torrent)
             return redirect("/user_page/")
         else:
             return render_template('delete.html', id_t=id_torrent)
