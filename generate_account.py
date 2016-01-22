@@ -40,6 +40,7 @@ def generate_account():
         opts, args = getopt.getopt(sys.argv[1:], "n:p:s:hv")
         if not opts:
             show_args_error()
+            return
         for key, value in opts:
             if key == "-n":
                 name = value

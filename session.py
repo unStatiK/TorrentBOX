@@ -5,8 +5,6 @@ from werkzeug.datastructures import CallbackDict
 from itsdangerous import URLSafeTimedSerializer, BadSignature
 from wtforms import Form, PasswordField, validators, StringField
 
-from main import SESSION_SALT
-
 
 class ItsdangerousSession(CallbackDict, SessionMixin):
     def __init__(self, initial=None):
@@ -18,7 +16,9 @@ class ItsdangerousSession(CallbackDict, SessionMixin):
 
 
 class ItsdangerousSessionInterface(SessionInterface):
-    salt = SESSION_SALT
+    #: the salt that should be applied in config as SESSION_SALT option for the
+    #: signing of cookie based sessions.
+    salt = ''
     session_class = ItsdangerousSession
 
     def get_serializer(self, app):

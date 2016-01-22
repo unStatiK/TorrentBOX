@@ -22,6 +22,8 @@ app.config['DEBUG'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://user:password@host/db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app, False)
 
 app.session_interface = ItsdangerousSessionInterface()
+app.session_interface.salt = SESSION_SALT
