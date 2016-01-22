@@ -15,7 +15,6 @@ from session_keys import USER_TOKEN, USER_ID_TOKEN
 from torrent_utils import allowed_file, decode
 from utils import uniqid
 
-import os
 import re
 
 
@@ -341,15 +340,18 @@ def info(id_torrent):
         except IOError:
             return redirect('/')
 
-        # todo rewrite try and template
+        # todo check this part
+        info = None
+        error = None
         if data:
             torrent_ = decode(data)
-            try:
-                return render_template('info.html', torrent=torrent, info=torrent_["info"]["files"])
-            except KeyError:
-                return render_template('info.html', torrent=torrent, info=torrent_, error=True)
-        else:
-            return render_template('info.html', torrent=torrent, info=None)
+            if 'files' in torrent_["info"]:
+                info = torrent_["info"]["files"]
+            else:
+                error = True
+                info = torrent_
+
+        return render_template('info.html', torrent=torrent, info=info, error=error)
     else:
         return redirect('/')
 
