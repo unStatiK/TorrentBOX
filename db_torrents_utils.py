@@ -117,9 +117,13 @@ def get_all_tags():
 
 
 def update_tag_name(tag_id, name):
-    tag_ = db.session.query(Tags).get(tag_id)
-    tag_.name = name
-    db.session.commit()
+    try:
+        tag_ = db.session.query(Tags).get(tag_id)
+        tag_.name = name
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
 
 
 def get_tag_by_id(tag_id):
@@ -129,18 +133,26 @@ def get_tag_by_id(tag_id):
 def delete_tag(tag_id):
     tag = get_tag_by_id(tag_id)
     if tag:
-        db.session.delete(tag)
-        db.session.commit()
+        try:
+            db.session.delete(tag)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
 
 def add_tag(torrent_id, name):
-    tag = Tags(name)
-    db.session.add(tag)
-    db.session.commit()
+    try:
+        tag = Tags(name)
+        db.session.add(tag)
+        db.session.commit()
 
-    torrents_ = db.session.query(Torrents).filter_by(id=torrent_id).first()
-    torrents_.str_tags = [tag.id]
-    db.session.commit()
+        torrents_ = db.session.query(Torrents).filter_by(id=torrent_id).first()
+        torrents_.str_tags = [tag.id]
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
 
 
 def fetch_torrents_by_account(user_id):
@@ -154,34 +166,54 @@ def get_torrent_by_id(torrent_id):
 def attache_tag(torrent_id, user_id, tag_name):
     torrent = get_torrent_by_id(torrent_id)
     if torrent.id_acc == user_id:
-        torrent.str_tags = [tag_name]
-        db.session.commit()
+        try:
+            torrent.str_tags = [tag_name]
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
 
 def delete_torrents_tag(torrent_id, tag_id):
     torrent = db.session.query(Torrents).filter_by(id=torrent_id).first()
     tag = db.session.query(Tags).filter_by(id=tag_id).first()
     if torrent and tag:
-        torrent.tags_.remove(tag)
-        db.session.commit()
+        try:
+            torrent.tags_.remove(tag)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
 
 def update_torrent(torrent_id, user_id, filename, description):
     torrent = get_torrent_by_id(torrent_id)
     if torrent and torrent.id_acc == user_id and filename != "":
-        torrent.name = filename
-        torrent.description = description
-        db.session.commit()
+        try:
+            torrent.name = filename
+            torrent.description = description
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
 
 def delete_torrent(torrent_id):
     torrent = db.session.query(Torrents).get(torrent_id)
     if torrent:
-        db.session.delete(torrent)
-        db.session.commit()
+        try:
+            db.session.delete(torrent)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
 
 def add_torrent(name, desc, filename, user_id, size):
-    me = Torrents(name, desc, filename, user_id, size)
-    db.session.add(me)
-    db.session.commit()
+    try:
+        me = Torrents(name, desc, filename, user_id, size)
+        db.session.add(me)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise

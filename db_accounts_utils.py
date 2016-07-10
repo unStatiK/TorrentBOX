@@ -49,22 +49,34 @@ def get_account(user_id):
 def update_account(user_id, name, password):
     account = get_account(user_id)
     if account:
-        account.name = name
-        if password != "":
-            password = generate_password_hash(password)
-            account.password = str(password)
-        db.session.commit()
+        try:
+            account.name = name
+            if password != "":
+                password = generate_password_hash(password)
+                account.password = str(password)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
 
 
 def add_account(name, password):
     password = generate_password_hash(password)
-    user = Accounts(name, str(password), USER_ACCOUNT)
-    db.session.add(user)
-    db.session.commit()
+    try:
+        user = Accounts(name, str(password), USER_ACCOUNT)
+        db.session.add(user)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
 
 
 def delete_account(user_id):
     user = get_account(user_id)
     if user:
-        db.session.delete(user)
-        db.session.commit()
+        try:
+            db.session.delete(user)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise
