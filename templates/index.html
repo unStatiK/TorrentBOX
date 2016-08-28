@@ -20,9 +20,10 @@
             <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<input type='text' name='pattern' class="small_auth">
 			<input type='submit' value='поиск' />
+		</form>
     </td>
 	</tr>
-    <tr ><td colspan='2' align="right">
+    <td> <td colspan='2' align="right">
 	   <a href="/about">о трекере&nbsp;&nbsp;</a>
            {% if auth %}
  	   | <a href="/user_page">моя страница</a> |
@@ -109,9 +110,6 @@
      <div class='foot'><br>created by unStatiK</div>
      <div style="font-size:0.6em;">theme <a style="text-decoration:underline;" href="/static/cyber.css">cyber</a></div>
    </center>
-
-
-
 </div>
 
 </body>
