@@ -50,6 +50,8 @@ Tested work on PyPy 1.8, 1.9, 2.0 beta 1
  python run.py
  
  open http://localhost:8080/ for profit!
-
+ 
+ 
+* http://localhost:8080/login  - login page
 
 
