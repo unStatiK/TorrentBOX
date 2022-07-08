@@ -1,6 +1,6 @@
-Flask
-SQLAlchemy
-Flask-SQLAlchemy
-wtforms
-Tornado
-psycopg2
+Flask==2.1.2
+SQLAlchemy==1.4.39
+Flask-SQLAlchemy==2.5.1
+wtforms==3.0.1
+Tornado==6.2
+psycopg2==2.9.3
