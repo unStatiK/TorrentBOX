@@ -69,7 +69,7 @@ def index():
         torrents_page = fetch_torrents_page(page_)
         return render_template('index.html', torrents=torrents_page['items'], tags=tags,
                                count=torrents_size_info['count'], size=torrents_size,
-                               pages=page_count,
+                               pages=int(page_count),
                                page=page_, authors=torrents_page['owners'], auth=is_auth, admin=is_admin)
 
     return render_template('index.html', auth=is_auth, admin=is_admin)
@@ -337,15 +337,15 @@ def info(id_torrent):
     torrent = get_torrent_by_id(id_torrent)
     if torrent:
         try:
-            data = open(app.config['UPLOAD_FOLDER'] + torrent.filename, "rb").read()
+            torrent_file = app.config['UPLOAD_FOLDER'] + torrent.filename
         except IOError:
             return redirect('/')
 
         # todo check this part
         info = None
         error = None
-        if data:
-            torrent_ = decode(data)
+        if torrent_file:
+            torrent_ = decode(torrent_file)
             if 'files' in torrent_["info"]:
                 info = torrent_["info"]["files"]
             else:

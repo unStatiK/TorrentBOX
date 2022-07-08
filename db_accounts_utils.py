@@ -13,7 +13,7 @@ from utils import generate_password_hash
 def check_login(login, password):
     if login and password:
         password = generate_password_hash(password)
-        account = db.session.query(Accounts.status).filter_by(name=login.encode("utf-8"), password=password).limit(
+        account = db.session.query(Accounts.status).filter_by(name=login, password=password).limit(
                 1).first()
         if account:
             if account.status != BANNED_ACCOUNT:
