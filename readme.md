@@ -14,9 +14,7 @@ etc...
 
 Full UTF-8 support
 
-Python2 compatibility only
-
-Tested work on PyPy 1.8, 1.9, 2.0 beta 1
+Python3 compatibility only
 
 
 # Installation

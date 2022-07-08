@@ -14,9 +14,9 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
             file_context.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             try:
-                data = open(app.config['UPLOAD_FOLDER'] + filename, "rb").read()
-                if data:
-                    torrent_ = decode(data)
+                torrent_file = app.config['UPLOAD_FOLDER'] + filename
+                if torrent_file:
+                    torrent_ = decode(torrent_file)
                     size = 0
                     try:
                         info = torrent_["info"]["files"]
