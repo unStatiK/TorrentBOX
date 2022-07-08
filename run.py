@@ -69,7 +69,7 @@ def index():
         torrents_page = fetch_torrents_page(page_)
         return render_template('index.html', torrents=torrents_page['items'], tags=tags,
                                count=torrents_size_info['count'], size=torrents_size,
-                               pages=int(page_count),
+                               pages=page_count,
                                page=page_, authors=torrents_page['owners'], auth=is_auth, admin=is_admin)
 
     return render_template('index.html', auth=is_auth, admin=is_admin)

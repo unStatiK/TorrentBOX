@@ -29,11 +29,11 @@ def get_torrents_pages_count():
     pages_count = 0
     if torrents:
         torrents_count = len(torrents)
-        pages_count = torrents_count / PAGE_TORRENT_COUNT
+        pages_count = int(torrents_count / PAGE_TORRENT_COUNT)
         if pages_count == 0:
             pages_count = 1
         else:
-            if (20 * pages_count) != torrents_count and (pages_count > 0):
+            if (PAGE_TORRENT_COUNT * pages_count) != torrents_count and (pages_count > 0):
                 pages_count += 1
     return pages_count
 
