@@ -1,6 +1,7 @@
 <!doctype html>
     <h1>Delete User?</h1>
     <form action="/admin/user/delete/{{ id_user }}/" method=post>
+         <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
          <input type=submit value="no" name=reject>
          <input type=submit value="yes" name=accept>
     </form>
