@@ -16,6 +16,8 @@ Full UTF-8 support
 
 Python3 compatibility only
 
+Compatibility with PyPy3
+
 
 # Installation
 
