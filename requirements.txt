@@ -4,5 +4,6 @@ Flask-SQLAlchemy==2.5.1
 wtforms==3.0.1
 Tornado==6.2
 psycopg2==2.9.3
+psycopg2cffi==2.9.0
 torrent-parser==0.4.0
 typing-extensions==4.3.0

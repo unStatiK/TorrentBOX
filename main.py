@@ -3,6 +3,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from session import ItsdangerousSessionInterface
+from psycopg2cffi import compat
+
+compat.register()
 
 app = Flask(__name__)
 
