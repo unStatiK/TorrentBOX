@@ -12,46 +12,62 @@ Used technology:
 * PostgreSQL
 etc...
 
-Full UTF-8 support
+Full UTF-8 support.
 
-Python3 compatibility only
+Python3 compatibility only.
 
-Compatibility with PyPy3
+Compatibility with PyPy3.
 
 
 # Installation
 
-* System package dependencies
+* System package dependencies:
   - libpq-dev
   - python-dev    
 
-* Install all python dependencies
+1. **Install all python dependencies:**
 
- pip install -r requirements.txt
+```pip install -r requirements.txt```
 
-* Edit config section in main.py
+2. **Edit config section in main.py. Strongly recommend changed default salt for password!**
 
- strongly recommend changed default salt for password
+3. **Create database and run sql script:**
 
-* Create database and run sql script
+ ```psql -U db_user -h db_host db_name < sql/create_pg.sql```
 
- psql -U db_user -h db_host db_name < sql/create_pg.sql
+4. **Generate admin account**
 
-* Generate admin account
+ ```python generate_account.py -n account_name -p password > /tmp/create_admin.sql```
 
- python generate_account.py -n account_name -p password > /tmp/create_admin.sql
+5. **Insert admin account into db**
 
-* Insert admin account into db
+ ```psql -U db_user -h db_host db_name < /tmp/create_admin.sql```
 
- psql -U db_user -h db_host db_name < /tmp/create_admin.sql
+6. **Run it!**
 
-* Run it!
-
- python run.py
+ ```python run.py```
  
  open http://localhost:8080/ for profit!
  
- 
-* http://localhost:8080/login  - login page
+ start with http://localhost:8080/login login page!
 
 
+# Installation for PyPy
+
+1. **Install pip module**
+
+```./pypy-xxx/bin/pypy -m ensurepip```
+
+2. **Upgrade pip to latest version**
+
+```./pypy-xxx/bin/pypy -mpip install -U pip wheel```
+
+3. **Install all python dependencies:**
+
+```./pypy-xxx/bin/pypy -mpip install  -r requirements.txt```
+
+4. **Repeat 2-5 steps installation instruction**
+
+5. **Run it!**
+
+```./pypy-xxx/bin/pypy run.py```
