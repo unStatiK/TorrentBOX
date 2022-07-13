@@ -8,7 +8,7 @@ CREATE TABLE accounts (
 CREATE TABLE torrents (
     id serial PRIMARY KEY,
     name text NOT NULL,
-    description text DEFAULT '' NOT NULL,
+    description text NOT NULL,
     filename varchar(255) NOT NULL,
     size real NOT NULL,
     id_acc bigint UNSIGNED NOT NULL,
