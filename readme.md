@@ -9,8 +9,7 @@ Used technology:
 * Tornado http server
 * WTForms
 * Bootstrap grid v2
-* PostgreSQL
-etc...
+* PostgreSQL/MySQL/MariaDB
 
 Full UTF-8 support.
 
@@ -22,18 +21,29 @@ Compatibility with PyPy3.
 # Installation
 
 * System package dependencies:
-  - libpq-dev
+  - libpq-dev  // for PostgreSQL
+  - libmariadbd-dev // for MariaDB
+  - libmysqlclient-dev // for MySQL
   - python-dev    
 
 1. **Install all python dependencies:**
 
-```pip install -r requirements.txt```
+```pip install -r deps/requirements.txt```
 
-2. **Edit config section in main.py. Strongly recommend changed default salt for password!**
+For PostgreSQL support
+```pip install -r deps/pg.txt```
+
+
+For MySQL/MariaDB support
+```pip install -r deps/mysql.txt```
+
+2. **Edit config section in pg_config.py or mysql_config.py and main.py. Strongly recommend changed default salt for password!**
 
 3. **Create database and run sql script:**
 
- ```psql -U db_user -h db_host db_name < sql/create_pg.sql```
+ For PostgreSQL ```psql -U db_user -h db_host db_name < sql/create_pg.sql```
+ 
+ For MySQL/MariaDB ```myql -u db_user -h db_host db_name < sql/create_mysql.sql```
 
 4. **Generate admin account**
 
@@ -41,7 +51,9 @@ Compatibility with PyPy3.
 
 5. **Insert admin account into db**
 
- ```psql -U db_user -h db_host db_name < /tmp/create_admin.sql```
+ For PostgreSQL ```psql -U db_user -h db_host db_name < /tmp/create_admin.sql```
+ 
+ For MySQL/MariaDB ```myql -u db_user -h db_host db_name < /tmp/create_admin.sql```
 
 6. **Run it!**
 
@@ -65,6 +77,10 @@ Compatibility with PyPy3.
 3. **Install all python dependencies:**
 
 ```./pypy-xxx/bin/pypy -mpip install  -r requirements.txt```
+
+For PostgreSQL ```./pypy-xxx/bin/pypy -mpip install  -r deps/pg.txt```
+
+For MySQL/MariaDB ```./pypy-xxx/bin/pypy -mpip install  -r deps/mysql.txt```
 
 4. **Repeat 2-5 steps installation instruction**
 
