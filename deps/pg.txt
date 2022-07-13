@@ -1,0 +1,2 @@
+psycopg2==2.9.3
+psycopg2cffi==2.9.0

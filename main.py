@@ -3,9 +3,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from session import ItsdangerousSessionInterface
-from psycopg2cffi import compat
+from pg_config import DB_URI
 
-compat.register()
+####### Uncomment this for use Mysql/MariaDB ########
+#from mysql_config import DB_URI
 
 app = Flask(__name__)
 
@@ -17,7 +18,6 @@ PAGE_TORRENT_COUNT = 20
 APP_HOST = '127.0.0.1'
 APP_PORT = 8080
 app.secret_key = 'your_secret_app_key'
-DB_URI = 'postgresql+psycopg2://user:password@host/db'
 #####################################################
 
 ALLOWED_EXTENSIONS = {'torrent'}

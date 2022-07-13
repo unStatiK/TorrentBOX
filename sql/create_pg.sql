@@ -2,7 +2,7 @@ CREATE TABLE accounts (
     id serial NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
     password varchar(255) DEFAULT '' NOT NULL,
-    status int,
+    status smallint,
     PRIMARY KEY(id)
 );
 
