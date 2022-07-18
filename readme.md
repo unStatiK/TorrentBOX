@@ -76,7 +76,7 @@ For MySQL/MariaDB support
 
 3. **Install all python dependencies:**
 
-```./pypy-xxx/bin/pypy -mpip install  -r requirements.txt```
+```./pypy-xxx/bin/pypy -mpip install  -r deps/requirements.txt```
 
 For PostgreSQL ```./pypy-xxx/bin/pypy -mpip install  -r deps/pg.txt```
 
