@@ -87,3 +87,9 @@ For MySQL/MariaDB ```./pypy-xxx/bin/pypy -mpip install  -r deps/mysql.txt```
 5. **Run it!**
 
 ```./pypy-xxx/bin/pypy run.py```
+
+# Deploy
+
+Example command for start service:
+
+```nohup python run.py > /dev/null 2>&1```
