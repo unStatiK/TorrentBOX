@@ -3,20 +3,21 @@
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from flask import render_template, redirect, request, abort
+from flask import render_template, redirect, request, abort, send_file
 from werkzeug.utils import secure_filename
 
 from db_accounts_utils import *
 from db_torrents_utils import *
 from helpers import torrent_full_delete, upload_torrent_file
-from main import app, APP_HOST, APP_PORT
+from main import app, APP_HOST, APP_PORT, TORRENT_PERSIST
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
 from torrent_utils import allowed_file, decode
 from utils import uniqid
 
 import re
-
+import io
+import base64
 
 @app.before_request
 def csrf_protect():
@@ -74,6 +75,14 @@ def index():
 
     return render_template('index.html', auth=is_auth, admin=is_admin)
 
+@app.route('/torrent/get/<int:id_torrent>/')
+def torrent(id_torrent):
+    if TORRENT_PERSIST == True:
+        filename = get_torrent_filename(id_torrent)
+        payload = get_torrent_payload(id_torrent)
+        if filename and payload:
+            payload_bin = base64.b64decode(payload.payload.encode())
+            return send_file(io.BytesIO(payload_bin), mimetype='application/octet-stream', as_attachment=True, download_name='%s' % filename)
 
 @app.route('/about/')
 def about():
