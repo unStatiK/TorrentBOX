@@ -28,3 +28,9 @@ CREATE TABLE tags_links (
     id_torrent int REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY(id_tags,id_torrent)
 );
+
+CREATE TABLE torrents_data (
+    id_torrent int REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    payload text NOT NULL,
+    PRIMARY KEY(id_torrent)
+);

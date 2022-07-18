@@ -217,3 +217,22 @@ def add_torrent(name, desc, filename, user_id, size):
     except:
         db.session.rollback()
         raise
+
+def add_torrent_with_payload(name, desc, filename, user_id, size, payload):
+    new_id = None
+    try:
+        me = Torrents(name, desc, filename, user_id, size)
+        db.session.add(me)
+        db.session.commit()
+        new_id = me.id
+        torrent_payload = TorrentsData(new_id, payload)
+        db.session.add(torrent_payload)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        if new_id:
+            delete_torrent(new_id)
+        raise
+
+def get_torrent_payload(torrent_id):
+    return db.session.query(TorrentsData.payload).filter_by(id_torrent=torrent_id).limit(1).first()

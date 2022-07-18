@@ -59,3 +59,12 @@ class Torrents(db.Model):
             self.tags_.append(self._find_tag(id_torrent))
 
     str_tags = property(_get_tags, _set_tags)
+
+
+class TorrentsData(db.Model):
+    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'), primary_key=True, autoincrement=False)
+    payload = db.Column(db.String)
+
+    def __init__(self, id_torrent, payload):
+        self.id_torrent = id_torrent
+        self.payload = payload

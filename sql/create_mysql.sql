@@ -28,3 +28,10 @@ CREATE TABLE tags_links (
     CONSTRAINT fk_id_torrent FOREIGN KEY (id_torrent) REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY(id_tags,id_torrent)
 ) ENGINE=INNODB DEFAULT CHARACTER SET=utf8mb4;
+
+CREATE TABLE torrents_data (
+    id_torrent bigint UNSIGNED NOT NULL,
+    payload longtext NOT NULL,
+    CONSTRAINT fk_id_torrent_data FOREIGN KEY (id_torrent) REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(id_torrent)
+) ENGINE=INNODB DEFAULT CHARACTER SET=utf8mb4;
