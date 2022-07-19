@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import os
 
 from main import app, TORRENT_PERSIST
 from db_torrents_utils import get_torrent_by_id, get_torrent_payload
@@ -16,5 +17,5 @@ def get_torrent_data(torrent_id):
             if os.path.exists(torrent_filename):
                 torrent_file = open(torrent_filename, "rb")
                 torrent_data = torrent_file.read()
-                in_file.close()
+                torrent_file.close()
                 return torrent_data
