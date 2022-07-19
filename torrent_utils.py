@@ -7,7 +7,7 @@ def decode(torrent_file):
     return tp.parse_torrent_file(torrent_file)
 
 def decode_data(torrent_data):
-    return tp.decode(torrent_data)
+    return tp.decode(torrent_data, errors="ignore")
 
 
 def allowed_file(filename):

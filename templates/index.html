@@ -79,7 +79,7 @@
 		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.description }}</a></td>
 		<td class="content">{{ authors[torrent.id] }}</td>
 		<td class="content">{{ torrent.size }} Mb</td>
-        <td class="content"><a href='http://TorrentBOX:81/{{ torrent.filename }}'>&gt;&gt;&gt;</a></td>
+        <td class="content"><a href='/torrent/get/{{ torrent.id }}/'>&gt;&gt;&gt;</a></td>
 	</tr>
         {% set j = j + 1 %}
         {% endfor %}

@@ -78,12 +78,10 @@ def index():
 
 @app.route('/torrent/get/<int:id_torrent>/')
 def torrent(id_torrent):
-    if TORRENT_PERSIST == True:
+    data = get_torrent_data(id_torrent)
+    if data:
         filename = get_torrent_filename(id_torrent)
-        payload = get_torrent_payload(id_torrent)
-        if filename and payload:
-            payload_bin = base64.b64decode(payload.payload.encode())
-            return send_file(io.BytesIO(payload_bin), mimetype='application/octet-stream', as_attachment=True, download_name='%s' % filename)
+        return send_file(io.BytesIO(data), mimetype='application/octet-stream', as_attachment=True, download_name='%s' % filename)
 
 @app.route('/about/')
 def about():
@@ -354,7 +352,7 @@ def info(id_torrent):
         else:
             error = True
             info = torrent_
-        return render_template('info.html', torrent=torrent, info=info, error=error)
+        return render_template('info.html', torrent=torrent, info=info, torrent_id=id_torrent, error=error)
     else:
         return redirect('/')
 
