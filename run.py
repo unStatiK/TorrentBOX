@@ -12,8 +12,9 @@ from helpers import torrent_full_delete, upload_torrent_file
 from main import app, APP_HOST, APP_PORT, TORRENT_PERSIST
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
-from torrent_utils import allowed_file, decode
+from torrent_utils import allowed_file, decode, decode_data
 from utils import uniqid
+from storage import get_torrent_data
 
 import re
 import io
@@ -343,24 +344,16 @@ def upload():
 
 @app.route('/info/<int:id_torrent>/')
 def info(id_torrent):
-    torrent = get_torrent_by_id(id_torrent)
-    if torrent:
-        try:
-            torrent_file = app.config['UPLOAD_FOLDER'] + torrent.filename
-        except IOError:
-            return redirect('/')
-
-        # todo check this part
+    torrent_data = get_torrent_data(id_torrent)
+    if torrent_data:
         info = None
         error = None
-        if torrent_file:
-            torrent_ = decode(torrent_file)
-            if 'files' in torrent_["info"]:
-                info = torrent_["info"]["files"]
-            else:
-                error = True
-                info = torrent_
-
+        torrent_ = decode_data(torrent_data)
+        if 'files' in torrent_["info"]:
+            info = torrent_["info"]["files"]
+        else:
+            error = True
+            info = torrent_
         return render_template('info.html', torrent=torrent, info=info, error=error)
     else:
         return redirect('/')

@@ -40,7 +40,6 @@ def get_torrents_pages_count():
 
 def fetch_torrents_page(page):
     torrents_page = {'items': [], 'owners': []}
-
     try:
         page = int(page)
         if page > 0:
@@ -93,7 +92,6 @@ def search_torrents(pattern):
     founded_torrents = []
     search_pattern = "".join(['%', pattern, '%'])
     torrents = db.session.query(Torrents).filter(Torrents.name.like(search_pattern)).all()
-
     torrent_id_collection = []
     for item in torrents:
         founded_torrents.append(item)
@@ -146,7 +144,6 @@ def add_tag(torrent_id, name):
         tag = Tags(name)
         db.session.add(tag)
         db.session.commit()
-
         torrents_ = db.session.query(Torrents).filter_by(id=torrent_id).first()
         torrents_.str_tags = [tag.id]
         db.session.commit()
