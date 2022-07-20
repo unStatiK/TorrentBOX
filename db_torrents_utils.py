@@ -91,7 +91,7 @@ def fetch_tags_by_torrent(torrent_id):
 def search_torrents(pattern):
     founded_torrents = []
     search_pattern = "".join(['%', pattern, '%'])
-    torrents = db.session.query(Torrents).filter(Torrents.name.like(search_pattern)).all()
+    torrents = db.session.query(Torrents).filter(Torrents.name.ilike(search_pattern)).all()
     torrent_id_collection = []
     for item in torrents:
         founded_torrents.append(item)
@@ -99,17 +99,17 @@ def search_torrents(pattern):
     torrents_by_desc = []
     if len(torrent_id_collection) > 0:
         torrents_by_desc = db.session.query(Torrents).filter(not_(Torrents.id.in_(torrent_id_collection)),
-                                                             Torrents.description.like(search_pattern)).all()
+                                                             Torrents.description.ilike(search_pattern)).all()
         founded_torrents = founded_torrents + torrents_by_desc
     else:
-        torrents_by_desc = db.session.query(Torrents).filter(Torrents.description.like(search_pattern)).all()
+        torrents_by_desc = db.session.query(Torrents).filter(Torrents.description.ilike(search_pattern)).all()
         founded_torrents = founded_torrents + torrents_by_desc
     for item in torrents_by_desc:
         torrent_id_collection.append(item.id)
 
     if len(torrent_id_collection) > 0:
         torrents_by_filename = db.session.query(TorrentsFiles).filter(not_(TorrentsFiles.id_torrent.in_(torrent_id_collection)),
-                                                             TorrentsFiles.filename.like(search_pattern)).all()
+                                                             TorrentsFiles.filename.ilike(search_pattern)).all()
         if torrents_by_filename:
             current_torrents_ids = []
             for torrent in torrents_by_filename:
@@ -117,7 +117,7 @@ def search_torrents(pattern):
             torrents = db.session.query(Torrents).filter(Torrents.id.in_(current_torrents_ids)).all()
             founded_torrents = founded_torrents + torrents
     else:
-        torrents_by_filename = db.session.query(TorrentsFiles).filter(TorrentsFiles.filename.like(search_pattern)).all()
+        torrents_by_filename = db.session.query(TorrentsFiles).filter(TorrentsFiles.filename.ilike(search_pattern)).all()
         if torrents_by_filename:
             current_torrents_ids = []
             for torrent in torrents_by_filename:
