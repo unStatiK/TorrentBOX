@@ -110,10 +110,20 @@ def search_torrents(pattern):
     if len(torrent_id_collection) > 0:
         torrents_by_filename = db.session.query(TorrentsFiles).filter(not_(TorrentsFiles.id_torrent.in_(torrent_id_collection)),
                                                              TorrentsFiles.filename.like(search_pattern)).all()
-        founded_torrents = founded_torrents + torrents_by_filename
+        if torrents_by_filename:
+            current_torrents_ids = []
+            for torrent in torrents_by_filename:
+                current_torrents_ids.append(torrent.id)
+            torrents = db.session.query(Torrents).filter(Torrents.id.in_(current_torrents_ids)).all()
+            founded_torrents = founded_torrents + torrents
     else:
         torrents_by_filename = db.session.query(TorrentsFiles).filter(TorrentsFiles.filename.like(search_pattern)).all()
-        founded_torrents = founded_torrents + torrents_by_filename
+        if torrents_by_filename:
+            current_torrents_ids = []
+            for torrent in torrents_by_filename:
+                current_torrents_ids.append(torrent.id)
+            torrents = db.session.query(Torrents).filter(Torrents.id.in_(current_torrents_ids)).all()
+            founded_torrents = founded_torrents + torrents
 
     return founded_torrents
 
@@ -223,6 +233,7 @@ def add_torrent(name, desc, filename, user_id, size):
         me = Torrents(name, desc, filename, user_id, size)
         db.session.add(me)
         db.session.commit()
+        return me.id
     except:
         db.session.rollback()
         raise
@@ -237,11 +248,25 @@ def add_torrent_with_payload(name, desc, filename, user_id, size, payload):
         torrent_payload = TorrentsData(new_id, payload)
         db.session.add(torrent_payload)
         db.session.commit()
+        return new_id
     except:
         db.session.rollback()
         if new_id:
             delete_torrent(new_id)
         raise
+
+def add_torrent_files(files, torrent_id):
+    try:
+        for file in files:
+            tf = TorrentsFiles(torrent_id, file)
+            db.session.add(tf)
+            db.session.flush()
+        if files:
+            db.session.commit()
+    except:
+        db.session.rollback()
+        raise
+
 
 def get_torrent_payload(torrent_id):
     return db.session.query(TorrentsData.payload).filter_by(id_torrent=torrent_id).limit(1).first()

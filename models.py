@@ -71,7 +71,8 @@ class TorrentsData(db.Model):
 
 
 class TorrentsFiles(db.Model):
-    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'), primary_key=True, autoincrement=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'), primary_key=False, autoincrement=False)
     filename = db.Column(db.String)
 
     def __init__(self, id_torrent, filename):

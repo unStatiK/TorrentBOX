@@ -37,8 +37,8 @@ CREATE TABLE torrents_data (
 ) ENGINE=INNODB DEFAULT CHARACTER SET=utf8mb4;
 
 CREATE TABLE torrents_files (
+    id serial PRIMARY KEY,
     id_torrent bigint UNSIGNED NOT NULL,
     filename text NOT NULL,
-    CONSTRAINT fk_id_torrent_file FOREIGN KEY (id_torrent) REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY(id_torrent)
+    CONSTRAINT fk_id_torrent_file FOREIGN KEY (id_torrent) REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=INNODB DEFAULT CHARACTER SET=utf8mb4;

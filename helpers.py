@@ -3,7 +3,7 @@
 import os
 import base64
 
-from db_torrents_utils import get_torrent_filename, delete_torrent, add_torrent, add_torrent_with_payload
+from db_torrents_utils import get_torrent_filename, delete_torrent, add_torrent, add_torrent_with_payload, add_torrent_files
 from main import app, TORRENT_PERSIST
 from torrent_utils import decode, decode_data
 from utils import uniqid
@@ -18,7 +18,8 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
             size = get_torrent_size(torrent_, file_context)
             file_context.seek(0)
             file_payload = base64.b64encode(file_context.read())
-            add_torrent_with_payload(name, description, filename, user_id, size, file_payload.decode("utf-8"))
+            new_id = add_torrent_with_payload(name, description, filename, user_id, size, file_payload.decode("utf-8"))
+            store_files(torrent_, new_id)
         else:
             if os.path.exists(app.config['UPLOAD_FOLDER']):
                 file_context.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -27,9 +28,22 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
                     if torrent_file:
                         torrent_ = decode(torrent_file)
                         size = get_torrent_size(torrent_, file_context)
-                        add_torrent(name, description, filename, user_id, size)
+                        new_id = add_torrent(name, description, filename, user_id, size)
+                        store_files(torrent_, new_id)
                 except IOError:
                     return
+
+def store_files(torrent, torrent_id):
+    files = []
+    if 'files' in torrent["info"]:
+        info = torrent["info"]["files"]
+        for file in info:
+            files.append("/".join(file['path']))
+    else:
+        info = torrent
+        files.append(info['info']['name'])
+    if files:
+        add_torrent_files(files, torrent_id)
 
 def get_torrent_size(torrent_dict, file_context):
     size = 0
