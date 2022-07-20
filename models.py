@@ -68,3 +68,12 @@ class TorrentsData(db.Model):
     def __init__(self, id_torrent, payload):
         self.id_torrent = id_torrent
         self.payload = payload
+
+
+class TorrentsFiles(db.Model):
+    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'), primary_key=True, autoincrement=False)
+    filename = db.Column(db.String)
+
+    def __init__(self, id_torrent, filename):
+        self.id_torrent = id_torrent
+        self.filename = filename

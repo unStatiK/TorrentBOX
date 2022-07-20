@@ -96,6 +96,7 @@ def search_torrents(pattern):
     for item in torrents:
         founded_torrents.append(item)
         torrent_id_collection.append(item.id)
+    torrents_by_desc = []
     if len(torrent_id_collection) > 0:
         torrents_by_desc = db.session.query(Torrents).filter(not_(Torrents.id.in_(torrent_id_collection)),
                                                              Torrents.description.like(search_pattern)).all()
@@ -103,6 +104,17 @@ def search_torrents(pattern):
     else:
         torrents_by_desc = db.session.query(Torrents).filter(Torrents.description.like(search_pattern)).all()
         founded_torrents = founded_torrents + torrents_by_desc
+    for item in torrents_by_desc:
+        torrent_id_collection.append(item.id)
+
+    if len(torrent_id_collection) > 0:
+        torrents_by_filename = db.session.query(TorrentsFiles).filter(not_(TorrentsFiles.id_torrent.in_(torrent_id_collection)),
+                                                             TorrentsFiles.filename.like(search_pattern)).all()
+        founded_torrents = founded_torrents + torrents_by_filename
+    else:
+        torrents_by_filename = db.session.query(TorrentsFiles).filter(TorrentsFiles.filename.like(search_pattern)).all()
+        founded_torrents = founded_torrents + torrents_by_filename
+
     return founded_torrents
 
 

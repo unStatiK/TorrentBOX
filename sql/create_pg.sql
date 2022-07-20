@@ -34,3 +34,9 @@ CREATE TABLE torrents_data (
     payload text NOT NULL,
     PRIMARY KEY(id_torrent)
 );
+
+CREATE TABLE torrents_files (
+    id_torrent int REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    filename text NOT NULL,
+    PRIMARY KEY(id_torrent)
+);
