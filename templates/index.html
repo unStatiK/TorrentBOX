@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -75,8 +75,8 @@
         {% set j = 0 %}
         {% for torrent in torrents %}
 	<tr class="content">
-		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.name }}</a></td>
-		<td class="content"><a href="/info/{{ torrent.id }}">{{ torrent.description }}</a></td>
+		<td class="content"><a href="/info/{{ torrent.id }}/">{{ torrent.name }}</a></td>
+		<td class="content"><a href="/info/{{ torrent.id }}/">{{ torrent.description }}</a></td>
 		<td class="content">{{ authors[torrent.id] }}</td>
 		<td class="content">{{ torrent.size }} Mb</td>
         <td class="content"><a href='/torrent/get/{{ torrent.id }}/'>&gt;&gt;&gt;</a></td>

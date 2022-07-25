@@ -5,6 +5,7 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from flask import render_template, redirect, request, abort, send_file
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 
 from db_accounts_utils import *
 from db_torrents_utils import *
@@ -15,14 +16,17 @@ from session_keys import USER_TOKEN, USER_ID_TOKEN
 from torrent_utils import allowed_file, decode, decode_data
 from utils import uniqid
 from storage import get_torrent_data
+from integration_api import PUBLIC_API_URLS
 
 import re
 import io
 import base64
+import ujson as json
+import werkzeug
 
 @app.before_request
 def csrf_protect():
-    if request.method == "POST":
+    if request.method == "POST" and not is_public_api(request.path):
         token = session.pop('_csrf_token', None)
         if not token or token != request.form.get('_csrf_token'):
             abort(403)
@@ -33,8 +37,21 @@ def generate_csrf_token():
         session['_csrf_token'] = uniqid()
     return session['_csrf_token']
 
+def generate_filename():
+    uid = uniqid()
+    filename = "".join([uid, ".torrent"])
+    return filename
+
+def is_public_api(path):
+    for k, v in PUBLIC_API_URLS.items():
+        if v == path:
+            return True
+    return False
 
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
+def make_json_response(data):
+    return app.response_class(response=json.dumps(data), mimetype='application/json')
 
 
 @app.route('/logout/')
@@ -333,11 +350,28 @@ def upload():
             user_id = session[USER_ID_TOKEN]
 
             if file_context and allowed_file(filename):
-                uid = uniqid()
-                filename = "".join([uid, ".torrent"])
+                filename = generate_filename()
                 upload_torrent_file(name, description, file_context, filename, user_id)
                 return redirect('/user_page/')
     return render_template('upload.html')
+
+
+@app.route(PUBLIC_API_URLS['torrent_upload'], methods=['POST'])
+def torrent_upload():
+    if request.method == 'POST' and 'login' in request.args and 'password' in request.args and 'name' in request.args and 'desc' in request.args:
+        login = request.args.get('login')
+        password = request.args.get('password')
+        name = request.args.get('name')
+        description = request.args.get('desc')
+        if check_login(login, password):
+            user_id = get_id_login(login)
+            filename = generate_filename()
+            file_context = FileStorage(io.BytesIO(request.data), filename=filename)
+            upload_torrent_file(name, description, file_context, filename, user_id)
+            d = {'status':'OK'}
+            return make_json_response(d)
+    d = {'status':'fail'}
+    return make_json_response(d)
 
 
 @app.route('/info/<int:id_torrent>/')

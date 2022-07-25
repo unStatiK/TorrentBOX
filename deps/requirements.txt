@@ -5,3 +5,4 @@ wtforms==3.0.1
 Tornado==6.2
 torrent-parser==0.4.0
 typing-extensions==4.3.0
+ujson==5.4.0
