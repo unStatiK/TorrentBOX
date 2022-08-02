@@ -12,7 +12,9 @@ CREATE TABLE torrents (
     filename varchar(255) NOT NULL,
     size real NOT NULL,
     id_acc bigint UNSIGNED NOT NULL,
-    CONSTRAINT fk_id_acc FOREIGN KEY (id_acc) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_id_acc FOREIGN KEY (id_acc) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FULLTEXT name_idx (name),
+    FULLTEXT desc_idx (description)
 ) ENGINE=INNODB DEFAULT CHARACTER SET=utf8mb4;
 
 
@@ -40,5 +42,9 @@ CREATE TABLE torrents_files (
     id serial PRIMARY KEY,
     id_torrent bigint UNSIGNED NOT NULL,
     filename text NOT NULL,
-    CONSTRAINT fk_id_torrent_file FOREIGN KEY (id_torrent) REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_id_torrent_file FOREIGN KEY (id_torrent) REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FULLTEXT filename_idx (filename)
 ) ENGINE=INNODB DEFAULT CHARACTER SET=utf8mb4;
+
+CREATE INDEX torrents_files_id_torrent_idx ON torrents_files (id_torrent) USING BTREE;
+CREATE INDEX torrents_data_id_torrent_idx ON torrents_data (id_torrent) USING BTREE;

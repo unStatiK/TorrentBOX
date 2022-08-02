@@ -41,3 +41,10 @@ CREATE TABLE torrents_files (
     filename text NOT NULL,
     PRIMARY KEY(id)
 );
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE INDEX torrents_name_idx ON torrents USING GIST (name gist_trgm_ops);
+CREATE INDEX torrents_desc_idx ON torrents USING GIST (description gist_trgm_ops);
+CREATE INDEX torrents_files_filename_idx ON torrents_files USING GIST (filename gist_trgm_ops);
+CREATE INDEX torrents_files_id_torrent_idx ON torrents_files (id_torrent);
+CREATE INDEX torrents_data_id_torrent_idx ON torrents_data (id_torrent);
