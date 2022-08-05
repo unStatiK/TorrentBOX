@@ -11,7 +11,7 @@ CREATE TABLE torrents (
     name text NOT NULL,
     description text DEFAULT '' NOT NULL,
     filename varchar(255) NOT NULL,
-    size real NOT NULL,
+    size bigint NOT NULL,
     id_acc int REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY(id)
 );
@@ -39,6 +39,12 @@ CREATE TABLE torrents_files (
     id serial NOT NULL,
     id_torrent int REFERENCES torrents(id) ON DELETE CASCADE ON UPDATE CASCADE,
     filename text NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE torrents_stat (
+    id smallint NOT NULL,
+    size bigint NOT NULL,
     PRIMARY KEY(id)
 );
 

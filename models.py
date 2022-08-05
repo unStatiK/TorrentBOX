@@ -35,7 +35,7 @@ class Torrents(db.Model):
     description = db.Column(db.String)
     filename = db.Column(db.String(255))
     id_acc = db.Column(db.Integer, db.ForeignKey('accounts.id'))
-    size = db.Column(db.Float)
+    size = db.Column(db.BigInteger)
     tags_ = relationship("Tags", secondary=tags_links)
 
     def __init__(self, name, description, filename, id_acc, size):
@@ -78,3 +78,12 @@ class TorrentsFiles(db.Model):
     def __init__(self, id_torrent, filename):
         self.id_torrent = id_torrent
         self.filename = filename
+
+
+class TorrentsStat(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    size = db.Column(db.BigInteger)
+
+    def __init__(self, id, size):
+        self.id = id
+        self.size = size

@@ -22,6 +22,7 @@ app.secret_key = 'your_secret_app_key'
 #####################################################
 
 ALLOWED_EXTENSIONS = {'torrent'}
+TORRENTS_STAT_ROW_ID = 1
 
 app.config['DEBUG'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

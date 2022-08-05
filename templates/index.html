@@ -77,13 +77,13 @@
 	<tr class="content">
 		<td class="content"><a href="/info/{{ torrent.id }}/">{{ torrent.name }}</a></td>
 		<td class="content"><a href="/info/{{ torrent.id }}/">{{ torrent.description }}</a></td>
-		<td class="content">{{ authors[torrent.id] }}</td>
-		<td class="content">{{ torrent.size }} Mb</td>
+		<td class="content">{{ authors[torrent.id_acc] }}</td>
+		<td class="content">{{ convert_unit(torrent.size) }}</td>
         <td class="content"><a href='/torrent/get/{{ torrent.id }}/'>&gt;&gt;&gt;</a></td>
 	</tr>
         {% set j = j + 1 %}
         {% endfor %}
-	<tr><td colspan='5' align="center"><br>общий размер торрентов : {{ size }} Gb<br>Всего торрентов : {{ count }}<br><br>
+	<tr><td colspan='5' align="center"><br>общий размер торрентов : {{ size }}<br>Всего торрентов : {{ count }}<br><br>
 		&larr;
                   {% for i in range(1,pages + 1) %}
                     {% if i == page %}

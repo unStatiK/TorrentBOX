@@ -46,13 +46,13 @@
         {% for file in info %}
 	<tr class="content">
 		<td class="content">{{ ("/".join(file['path'])) }}</td>
-		<td class="content">{{ (file["length"]*0.001)*0.001 }} Mb</td>
+		<td class="content">{{ convert_unit(file["length"]) }}</td>
 	</tr>
         {% endfor %}
        {% else %}
 	<tr class="content">
 		<td class="content">{{ (info['info']['name']) }}</td>
-		<td class="content">{{ (info['info']['length']*0.001)*0.001 }} Mb</td>
+		<td class="content">{{ convert_unit(info['info']['length']) }}</td>
 	</tr>
        {% endif %}
       {% endif %}

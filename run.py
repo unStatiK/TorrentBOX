@@ -10,19 +10,22 @@ from werkzeug.datastructures import FileStorage
 from db_accounts_utils import *
 from db_torrents_utils import *
 from helpers import torrent_full_delete, upload_torrent_file
-from main import app, APP_HOST, APP_PORT, TORRENT_PERSIST
+from main import app, APP_HOST, APP_PORT
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
-from torrent_utils import allowed_file, decode, decode_data
-from utils import uniqid
+from torrent_utils import allowed_file, decode_data
+from utils import uniqid, convert_unit
 from storage import get_torrent_data
 from integration_api import PUBLIC_API_URLS
 
 import re
 import io
-import base64
 import ujson as json
-import werkzeug
+
+
+@app.context_processor
+def utility_processor():
+    return dict(convert_unit=convert_unit)
 
 @app.before_request
 def csrf_protect():
@@ -82,7 +85,7 @@ def index():
     torrents_size = torrents_size_info['size']
 
     if torrents_size > 0 and page_count > 0 and page_:
-        torrents_size = round(torrents_size * 0.001, 5)
+        torrents_size = convert_unit(torrents_size)
         tags = fetch_tags()
 
         torrents_page = fetch_torrents_page(page_)
