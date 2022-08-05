@@ -280,10 +280,15 @@ def add_torrent_files_and_size(files, torrent_id, size):
 def get_torrent_payload(torrent_id):
     return db.session.query(TorrentsData.payload).filter_by(id_torrent=torrent_id).limit(1).first()
 
+
 def get_torrents_stat_size():
     return db.session.query(TorrentsStat.size).filter_by(id=TORRENTS_STAT_ROW_ID).limit(1).first()
+
+
 def get_torrents_stat_by_id(id):
     return db.session.query(TorrentsStat).filter_by(id=id).first()
+
+
 def save_new_torrents_stat_size(size):
     try:
         ts = TorrentsStat(TORRENTS_STAT_ROW_ID, size)
@@ -292,6 +297,8 @@ def save_new_torrents_stat_size(size):
     except:
         db.session.rollback()
         raise
+
+
 def update_torrents_stat_size(size):
     torrents_stat = get_torrents_stat_by_id(TORRENTS_STAT_ROW_ID)
     try:
