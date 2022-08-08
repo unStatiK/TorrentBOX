@@ -76,10 +76,12 @@ def index():
         page_ = 1
 
     is_auth = None
-    if session.get(USER_TOKEN):
+    user_session_info = check_user_session()
+    is_admin = user_session_info['is_admin']
+    if user_session_info['is_auth']:
         is_auth = True
-
-    is_admin = check_admin_session()
+    else:
+        session.clear()
 
     torrents_size_info = fetch_torrents_size()
     torrents_size = torrents_size_info['size']
@@ -148,27 +150,37 @@ def search():
 @app.route('/admin/')
 def admin():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
-        if check_admin_session():
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] and user_session_info['is_admin']:
             torrents = get_all_torrents()
             tags = get_all_tags()
             users = get_all_users()
             return render_template('admin.html', torrents=torrents, tags=tags, users=users)
-
+        else:
+            session.clear()
+            return redirect('/')
 
 @app.route('/admin/tag/edit/<int:id_tag>/', methods=['POST', 'GET'])
 def tag_edit(id_tag):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
             if 'tag' in request.form:
-                if check_admin_session():
+                user_session_info = check_user_session()
+                if user_session_info['is_auth'] and user_session_info['is_admin']:
                     tag = request.form['tag'].strip()
                     if not tag == "":
                         update_tag_name(id_tag, tag)
-
+                else:
+                    session.clear()
+                    return redirect('/')
         else:
-            if check_admin_session():
+            user_session_info = check_user_session()
+            if user_session_info['is_auth'] and user_session_info['is_admin']:
                 tag = get_tag_by_id(id_tag)
                 return render_template('tag_edit.html', tag=tag)
+            else:
+                session.clear()
+                return redirect('/')
 
     return redirect('/admin/')
 
@@ -177,11 +189,13 @@ def tag_edit(id_tag):
 def tag_delete(id_tag):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
-            if check_admin_session():
+            user_session_info = check_user_session()
+            if user_session_info['is_auth'] and user_session_info['is_admin']:
                 if 'accept' in request.form and request.form['accept'] == "yes":
                     delete_tag(id_tag)
                 return redirect("/admin/")
             else:
+                session.clear()
                 return redirect('/')
 
         else:
@@ -194,7 +208,8 @@ def user_edit(id_user):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
             if USER_TOKEN in request.form and 'password' in request.form and 're_password' in request.form:
-                if check_admin_session():
+                user_session_info = check_user_session()
+                if user_session_info['is_auth'] and user_session_info['is_admin']:
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
                     re_password = request.form['re_password'].strip()
@@ -203,11 +218,18 @@ def user_edit(id_user):
                     if password == re_password:
                         update_account(id_user, name, password)
                     return redirect('/admin/')
+                else:
+                    session.clear()
+                    return redirect('/')
 
         else:
-            if check_admin_session():
+            user_session_info = check_user_session()
+            if user_session_info['is_auth'] and user_session_info['is_admin']:
                 user_context = get_account(id_user)
                 return render_template('user_edit.html', user=user_context)
+            else:
+                session.clear()
+                return redirect('/')
     return redirect('/')
 
 
@@ -216,7 +238,8 @@ def user_add():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
             if USER_TOKEN in request.form and 'password' in request.form and 're_password' in request.form:
-                if check_admin_session():
+                user_session_info = check_user_session()
+                if user_session_info['is_auth'] and user_session_info['is_admin']:
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
                     re_password = request.form['re_password'].strip()
@@ -224,19 +247,30 @@ def user_add():
                         if password == re_password:
                             add_account(name, password)
                     return redirect('/admin/')
+                else:
+                    session.clear()
+                    return redirect('/')
         else:
-            if check_admin_session():
+            user_session_info = check_user_session()
+            if user_session_info['is_auth'] and user_session_info['is_admin']:
                 return render_template('user_add.html')
+            else:
+                session.clear()
+                return redirect('/')
 
 
 @app.route('/admin/user/delete/<int:id_user>/', methods=['POST', 'GET'])
 def user_delete(id_user):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
-            if check_admin_session():
+            user_session_info = check_user_session()
+            if user_session_info['is_auth'] and user_session_info['is_admin']:
                 if 'accept' in request.form and request.form['accept'] == "yes":
                     delete_account(id_user)
                 return redirect("/admin/")
+            else:
+                session.clear()
+                return redirect('/')
         else:
             return render_template('user_delete.html', id_user=id_user)
     return redirect('/')
@@ -245,6 +279,10 @@ def user_delete(id_user):
 @app.route('/user_page/')
 def user():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] == False:
+            session.clear()
+            return redirect('/')
         if isinstance(session[USER_ID_TOKEN], int):
             user_id = session[USER_ID_TOKEN]
             torrents = fetch_torrents_by_account(user_id)
@@ -256,6 +294,10 @@ def user():
 @app.route('/user_page/addtag/', methods=['POST', 'GET'])
 def addtag():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] == False:
+            session.clear()
+            return redirect('/')
         if request.method == 'POST':
             if 'newtag' in request.form and 'torrent_id' in request.form:
                 if re.match('^[0-9]{1,3}$', request.form['torrent_id']):
@@ -275,6 +317,10 @@ def addtag():
 @app.route('/user_page/torrent/<int:id_torrent>/addtag/', methods=['POST', 'GET'])
 def addtag_torrent(id_torrent):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] == False:
+            session.clear()
+            return redirect('/')
         if request.method == 'POST':
             if 'tag' in request.form and isinstance(session[USER_ID_TOKEN], int):
                 user_id = int(session[USER_ID_TOKEN])
@@ -288,11 +334,15 @@ def addtag_torrent(id_torrent):
 @app.route('/user_page/torrent/<int:torrent_id>/tag/<int:tag_id>/delete/')
 def del_tag(torrent_id, tag_id):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
-        if not check_admin_session():
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] and user_session_info['is_admin']:
             if isinstance(session[USER_ID_TOKEN], int):
                 user_id = session[USER_ID_TOKEN]
                 if not check_allow_change_torrent_tag(user_id, torrent_id):
                     return redirect("/user_page/")
+        else:
+            session.clear()
+            return redirect('/')
         delete_torrents_tag(torrent_id, tag_id)
         return redirect("/user_page/edit/" + str(torrent_id))
     else:
@@ -302,6 +352,10 @@ def del_tag(torrent_id, tag_id):
 @app.route('/user_page/edit/<int:torrent_id>/', methods=['POST', 'GET'])
 def edit(torrent_id):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] == False:
+            session.clear()
+            return redirect('/')
         if request.method == 'POST':
             if 'file_name' in request.form and 'file_desc' in request.form:
                 file_name = request.form['file_name'].strip()
@@ -326,6 +380,10 @@ def edit(torrent_id):
 @app.route('/user_page/delete/<int:id_torrent>/', methods=['POST', 'GET'])
 def delete(id_torrent):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
+        user_session_info = check_user_session()
+        if user_session_info['is_auth'] == False:
+            session.clear()
+            return redirect('/')
         if request.method == 'POST':
             if 'accept' in request.form and request.form['accept'] == "yes":
                 if isinstance(session[USER_ID_TOKEN], int):
@@ -341,6 +399,11 @@ def delete(id_torrent):
 @app.route('/user_page/upload/', methods=['POST', 'GET'])
 def upload():
     if USER_TOKEN not in session and USER_ID_TOKEN not in session and not isinstance(session[USER_ID_TOKEN], int):
+        return redirect('/')
+
+    user_session_info = check_user_session()
+    if user_session_info['is_auth'] == False:
+        session.clear()
         return redirect('/')
 
     if request.method == 'POST':

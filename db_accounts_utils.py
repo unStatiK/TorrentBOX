@@ -21,13 +21,16 @@ def check_login(login, password):
         return None
 
 
-def check_admin_session():
+def check_user_session():
+    user_session_info = {'is_auth': False, 'is_admin': False}
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         account = db.session.query(Accounts.status).filter_by(id=int(session[USER_ID_TOKEN])).limit(1).first()
         if account:
+            if account.status != BANNED_ACCOUNT:
+                user_session_info['is_auth'] = True
             if account.status == ADMIN_ACCOUNT:
-                return True
-    return None
+                user_session_info['is_admin'] = True
+    return user_session_info
 
 
 def get_id_login(login):
