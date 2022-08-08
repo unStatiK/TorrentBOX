@@ -60,7 +60,8 @@ def get_torrent_size(torrent_dict):
 def torrent_full_delete(id_torrent):
     filename = get_torrent_filename(id_torrent)
     if filename:
-        file_path = app.config['UPLOAD_FOLDER'] + filename
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            delete_torrent(id_torrent)
+        if TORRENT_PERSIST == False:
+           file_path = app.config['UPLOAD_FOLDER'] + filename
+           if os.path.exists(file_path):
+               os.remove(file_path)
+        delete_torrent(id_torrent)

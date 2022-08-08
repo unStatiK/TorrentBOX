@@ -222,9 +222,18 @@ def update_torrent(torrent_id, user_id, filename, description):
 
 def delete_torrent(torrent_id):
     torrent = db.session.query(Torrents).get(torrent_id)
+    torrents_size = db.session.query(TorrentsStat.size).filter_by(id=TORRENTS_STAT_ROW_ID).limit(1).first()
+    size = 0
+    if torrents_size:
+        size = torrents_size.size
     if torrent:
         try:
             db.session.delete(torrent)
+            db.session.flush()
+            new_size = 0
+            if size != 0:
+                new_size = size - torrent.size
+            update_torrents_stat_size(new_size)
             db.session.commit()
         except:
             db.session.rollback()
