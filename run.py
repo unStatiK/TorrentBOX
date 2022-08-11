@@ -27,6 +27,7 @@ import ujson as json
 def utility_processor():
     return dict(convert_unit=convert_unit)
 
+
 @app.before_request
 def csrf_protect():
     if request.method == "POST" and not is_public_api(request.path):
@@ -40,10 +41,12 @@ def generate_csrf_token():
         session['_csrf_token'] = uniqid()
     return session['_csrf_token']
 
+
 def generate_filename():
     uid = uniqid()
     filename = "".join([uid, ".torrent"])
     return filename
+
 
 def is_public_api(path):
     for k, v in PUBLIC_API_URLS.items():
@@ -51,7 +54,9 @@ def is_public_api(path):
             return True
     return False
 
+
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
 
 def make_json_response(data):
     return app.response_class(response=json.dumps(data), mimetype='application/json')
@@ -98,12 +103,14 @@ def index():
 
     return render_template('index.html', auth=is_auth, admin=is_admin)
 
+
 @app.route('/torrent/get/<int:id_torrent>/')
 def torrent(id_torrent):
     data = get_torrent_data(id_torrent)
     if data:
         filename = get_torrent_filename(id_torrent)
         return send_file(io.BytesIO(data), mimetype='application/octet-stream', as_attachment=True, download_name='%s' % filename)
+
 
 @app.route('/about/')
 def about():
@@ -160,6 +167,7 @@ def admin():
             session.clear()
             return redirect('/')
 
+
 @app.route('/admin/tag/edit/<int:id_tag>/', methods=['POST', 'GET'])
 def tag_edit(id_tag):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
@@ -167,17 +175,17 @@ def tag_edit(id_tag):
             if 'tag' in request.form:
                 user_session_info = check_user_session()
                 if user_session_info['is_auth'] and user_session_info['is_admin']:
-                    tag = request.form['tag'].strip()
-                    if not tag == "":
-                        update_tag_name(id_tag, tag)
+                    requested_tag = request.form['tag'].strip()
+                    if requested_tag != "":
+                        update_tag_name(id_tag, requested_tag)
                 else:
                     session.clear()
                     return redirect('/')
         else:
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
-                tag = get_tag_by_id(id_tag)
-                return render_template('tag_edit.html', tag=tag)
+                requested_tag = get_tag_by_id(id_tag)
+                return render_template('tag_edit.html', tag=requested_tag)
             else:
                 session.clear()
                 return redirect('/')
@@ -280,7 +288,7 @@ def user_delete(id_user):
 def user():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         user_session_info = check_user_session()
-        if user_session_info['is_auth'] == False:
+        if not user_session_info['is_auth']:
             session.clear()
             return redirect('/')
         if isinstance(session[USER_ID_TOKEN], int):
@@ -295,7 +303,7 @@ def user():
 def addtag():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         user_session_info = check_user_session()
-        if user_session_info['is_auth'] == False:
+        if not user_session_info['is_auth']:
             session.clear()
             return redirect('/')
         if request.method == 'POST':
@@ -318,7 +326,7 @@ def addtag():
 def addtag_torrent(id_torrent):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         user_session_info = check_user_session()
-        if user_session_info['is_auth'] == False:
+        if not user_session_info['is_auth']:
             session.clear()
             return redirect('/')
         if request.method == 'POST':
@@ -353,7 +361,7 @@ def del_tag(torrent_id, tag_id):
 def edit(torrent_id):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         user_session_info = check_user_session()
-        if user_session_info['is_auth'] == False:
+        if not user_session_info['is_auth']:
             session.clear()
             return redirect('/')
         if request.method == 'POST':
@@ -365,11 +373,11 @@ def edit(torrent_id):
                     update_torrent(torrent_id, user_id, file_name, file_desc)
                 return redirect("/user_page/")
         else:
-            torrent = get_torrent_by_id(torrent_id)
+            current_torrent = get_torrent_by_id(torrent_id)
             all_tags = get_all_tags()
             tags = fetch_tags_by_torrent(torrent_id)
-            if torrent:
-                return render_template('edit.html', torrent=torrent, torrent_id=torrent_id, tags=tags,
+            if current_torrent:
+                return render_template('edit.html', torrent=current_torrent, torrent_id=torrent_id, tags=tags,
                                        all_tags=all_tags)
             else:
                 return render_template('user.html')
@@ -381,7 +389,7 @@ def edit(torrent_id):
 def delete(id_torrent):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         user_session_info = check_user_session()
-        if user_session_info['is_auth'] == False:
+        if not user_session_info['is_auth']:
             session.clear()
             return redirect('/')
         if request.method == 'POST':
@@ -402,7 +410,7 @@ def upload():
         return redirect('/')
 
     user_session_info = check_user_session()
-    if user_session_info['is_auth'] == False:
+    if not user_session_info['is_auth']:
         session.clear()
         return redirect('/')
 
@@ -425,12 +433,12 @@ def upload():
 @app.route(PUBLIC_API_URLS['torrent_upload'], methods=['POST'])
 def torrent_upload():
     if request.method == 'POST' and 'login' in request.args and 'password' in request.args and 'name' in request.args and 'desc' in request.args:
-        login = request.args.get('login')
+        current_login = request.args.get('login')
         password = request.args.get('password')
         name = request.args.get('name')
         description = request.args.get('desc')
-        if check_login(login, password):
-            user_id = get_id_login(login)
+        if check_login(current_login, password):
+            user_id = get_id_login(current_login)
             filename = generate_filename()
             file_context = FileStorage(io.BytesIO(request.data), filename=filename)
             upload_torrent_file(name, description, file_context, filename, user_id)
@@ -444,15 +452,15 @@ def torrent_upload():
 def info(id_torrent):
     torrent_data = get_torrent_data(id_torrent)
     if torrent_data:
-        info = None
+        current_info = None
         error = None
         torrent_ = decode_data(torrent_data)
         if 'files' in torrent_["info"]:
-            info = torrent_["info"]["files"]
+            current_info = torrent_["info"]["files"]
         else:
             error = True
-            info = torrent_
-        return render_template('info.html', torrent=torrent, info=info, torrent_id=id_torrent, error=error)
+            current_info = torrent_
+        return render_template('info.html', torrent=torrent, info=current_info, torrent_id=id_torrent, error=error)
     else:
         return redirect('/')
 

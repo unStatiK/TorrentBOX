@@ -6,28 +6,29 @@ import sys
 
 
 def show_help():
-    print ("command options:")
-    print ("-h show this help")
-    print ("-n <name> : set name of account")
-    print ("-p <password> : set password of account")
-    print ("-s <status> : set status of account (status string should be admin or user), default value is admin [this option not required]")
-    print ("-v show generated hash string at separate line")
+    print("command options:")
+    print("-h show this help")
+    print("-n <name> : set name of account")
+    print("-p <password> : set password of account")
+    print("-s <status> : set status of account (status string should be admin or user), "
+          "default value is admin [this option not required]")
+    print("-v show generated hash string at separate line")
 
 
 def show_args_error():
-    print ("args -n and -p is required")
+    print("args -n and -p is required")
 
 
 def show_hash_string(hash_str):
     hash_value = "".join(["hash: ", hash_str])
-    print (hash_value)
+    print(hash_value)
 
 
 def show_query(name, hash_str, status):
     account_insert_query = "INSERT INTO accounts (id, name, password, status) VALUES(default,'{0}','{1}',{2});" \
         .format(name, hash_str, status)
 
-    print (account_insert_query)
+    print(account_insert_query)
 
 
 def generate_account():
@@ -67,7 +68,7 @@ def generate_account():
         else:
             show_args_error()
     except getopt.GetoptError as err:
-        print (str(err))
+        print(str(err))
 
 
 generate_account()

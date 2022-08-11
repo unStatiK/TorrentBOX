@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from flask import session
 from sqlalchemy import not_
 from account_status import BANNED_ACCOUNT, ADMIN_ACCOUNT, USER_ACCOUNT
@@ -13,18 +12,19 @@ from utils import generate_password_hash
 def check_login(login, password):
     if login and password:
         password = generate_password_hash(password)
-        account = db.session.query(Accounts.status).filter_by(name=login, password=password).limit(
-                1).first()
+        account = db.session.query(Accounts.status) \
+            .filter_by(name=login, password=password).limit(1).first()
         if account:
             if account.status != BANNED_ACCOUNT:
                 return account.status
-        return None
+    return None
 
 
 def check_user_session():
     user_session_info = {'is_auth': False, 'is_admin': False}
     if USER_TOKEN in session and USER_ID_TOKEN in session:
-        account = db.session.query(Accounts.status).filter_by(id=int(session[USER_ID_TOKEN])).limit(1).first()
+        account = db.session.query(Accounts.status) \
+            .filter_by(id=int(session[USER_ID_TOKEN])).limit(1).first()
         if account:
             if account.status != BANNED_ACCOUNT:
                 user_session_info['is_auth'] = True
@@ -34,14 +34,16 @@ def check_user_session():
 
 
 def get_id_login(login):
-    account = db.session.query(Accounts.id).filter_by(name=login).limit(1).first()
+    account = db.session.query(Accounts.id) \
+        .filter_by(name=login).limit(1).first()
     if account:
         return account.id
     return None
 
 
 def get_all_users():
-    return db.session.query(Accounts).filter(not_(Accounts.id == int(session[USER_ID_TOKEN]))) \
+    return db.session.query(Accounts) \
+        .filter(not_(Accounts.id == int(session[USER_ID_TOKEN]))) \
         .order_by(Accounts.name).all()
 
 
@@ -58,7 +60,7 @@ def update_account(user_id, name, password):
                 password = generate_password_hash(password)
                 account.password = str(password)
             db.session.commit()
-        except:
+        except (Exception,):
             db.session.rollback()
             raise
 
@@ -69,7 +71,7 @@ def add_account(name, password):
         user = Accounts(name, str(password), USER_ACCOUNT)
         db.session.add(user)
         db.session.commit()
-    except:
+    except (Exception,):
         db.session.rollback()
         raise
 
@@ -80,6 +82,6 @@ def delete_account(user_id):
         try:
             db.session.delete(user)
             db.session.commit()
-        except:
+        except (Exception,):
             db.session.rollback()
             raise

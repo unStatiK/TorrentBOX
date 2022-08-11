@@ -16,10 +16,11 @@ def fetch_tag_by_name(name):
 def fetch_torrents_size():
     info = {}
     torrents_count = db.session.query(func.count(Torrents.id)).scalar()
-    torrents_size = db.session.query(TorrentsStat.size).filter_by(id=TORRENTS_STAT_ROW_ID).limit(1).first()
+    torrents_size = db.session.query(TorrentsStat.size) \
+        .filter_by(id=TORRENTS_STAT_ROW_ID).limit(1).first()
     size = 0
     if torrents_size:
-       size =  torrents_size.size
+        size = torrents_size.size
     info['size'] = size
     info['count'] = torrents_count
     return info
@@ -33,7 +34,8 @@ def get_torrents_pages_count():
         if pages_count == 0:
             pages_count = 1
         else:
-            if (PAGE_TORRENT_COUNT * pages_count) != torrents_count and (pages_count > 0):
+            if (PAGE_TORRENT_COUNT * pages_count) != torrents_count \
+             and (pages_count > 0):
                 pages_count += 1
     return pages_count
 
@@ -43,24 +45,27 @@ def fetch_torrents_page(page):
     try:
         page = int(page)
         if page > 0:
-            torrents_collection = db.session.query(Torrents).order_by(Torrents.id).offset(
-                (page - 1) * PAGE_TORRENT_COUNT).limit(PAGE_TORRENT_COUNT).all()
+            torrents_collection = db.session.query(Torrents) \
+               .order_by(Torrents.id).offset((page - 1) * PAGE_TORRENT_COUNT) \
+               .limit(PAGE_TORRENT_COUNT).all()
             torrents_owners = {}
             accounts_ids = []
             for item in torrents_collection:
                 accounts_ids.append(item.id_acc)
-            accounts = db.session.query(Accounts.id, Accounts.name).filter(Accounts.id.in_(accounts_ids)).all()
+            accounts = db.session.query(Accounts.id, Accounts.name)\
+                .filter(Accounts.id.in_(accounts_ids)).all()
             for account in accounts:
                 torrents_owners[account.id] = account.name
             torrents_page['items'] = torrents_collection
             torrents_page['owners'] = torrents_owners
         return torrents_page
-    except Exception:
+    except (Exception,):
         return torrents_page
 
 
 def check_allow_change_torrent_tag(user_id, torrent_id):
-    torrent = db.session.query(Torrents.id_acc).filter_by(id=torrent_id).limit(1).first()
+    torrent = db.session.query(Torrents.id_acc) \
+        .filter_by(id=torrent_id).limit(1).first()
     if torrent:
         if torrent.id_acc == user_id:
             return True
@@ -68,7 +73,8 @@ def check_allow_change_torrent_tag(user_id, torrent_id):
 
 
 def check_allow_torrent_delete(user_id, torrent_id):
-    torrent = db.session.query(Torrents.id_acc).filter_by(id=torrent_id).limit(1).first()
+    torrent = db.session.query(Torrents.id_acc) \
+        .filter_by(id=torrent_id).limit(1).first()
     if torrent:
         if torrent.id_acc == user_id:
             return True
@@ -76,14 +82,15 @@ def check_allow_torrent_delete(user_id, torrent_id):
 
 
 def get_torrent_filename(torrent_id):
-    torrent = db.session.query(Torrents.filename).filter_by(id=torrent_id).limit(1).first()
+    torrent = db.session.query(Torrents.filename) \
+        .filter_by(id=torrent_id).limit(1).first()
     if torrent:
         return torrent.filename
 
 
 def fetch_torrents_by_tag(tag_id):
-    return db.session.query(Torrents).filter(Torrents.id.in_(db.session.query(tags_links.c.id_torrent).
-                                                             filter(tags_links.c.id_tags == tag_id))).all()
+    return db.session.query(Torrents) \
+        .filter(Torrents.id.in_(db.session.query(tags_links.c.id_torrent).filter(tags_links.c.id_tags == tag_id))).all()
 
 
 def fetch_tags_by_torrent(torrent_id):
@@ -111,8 +118,9 @@ def search_torrents(pattern):
         torrent_id_collection.append(item.id)
 
     if len(torrent_id_collection) > 0:
-        torrents_by_filename = db.session.query(TorrentsFiles).filter(not_(TorrentsFiles.id_torrent.in_(torrent_id_collection)),
-                                                             TorrentsFiles.filename.ilike(search_pattern)).all()
+        torrents_by_filename = db.session.query(TorrentsFiles).filter(
+            not_(TorrentsFiles.id_torrent.in_(torrent_id_collection)),
+            TorrentsFiles.filename.ilike(search_pattern)).all()
         if torrents_by_filename:
             current_torrents_ids = []
             for torrent in torrents_by_filename:
@@ -120,7 +128,8 @@ def search_torrents(pattern):
             torrents = db.session.query(Torrents).filter(Torrents.id.in_(current_torrents_ids)).all()
             founded_torrents = founded_torrents + torrents
     else:
-        torrents_by_filename = db.session.query(TorrentsFiles).filter(TorrentsFiles.filename.ilike(search_pattern)).all()
+        torrents_by_filename = db.session.query(TorrentsFiles).filter(
+            TorrentsFiles.filename.ilike(search_pattern)).all()
         if torrents_by_filename:
             current_torrents_ids = []
             for torrent in torrents_by_filename:
@@ -250,6 +259,7 @@ def add_torrent(name, desc, filename, user_id, size):
         db.session.rollback()
         raise
 
+
 def add_torrent_with_payload(name, desc, filename, user_id, size, payload):
     new_id = None
     try:
@@ -266,6 +276,7 @@ def add_torrent_with_payload(name, desc, filename, user_id, size, payload):
         if new_id:
             delete_torrent(new_id)
         raise
+
 
 def add_torrent_files_and_size(files, torrent_id, size):
     try:

@@ -13,7 +13,7 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
     if name != "" and description and filename != "":
         uid = uniqid()
         filename = "".join([uid, ".torrent"])
-        if TORRENT_PERSIST == True:
+        if TORRENT_PERSIST:
             torrent_ = decode_data(file_context.read())
             size = get_torrent_size(torrent_)
             file_context.seek(0)
@@ -33,6 +33,7 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
                 except IOError:
                     return
 
+
 def store_files_and_size(torrent, torrent_id, size):
     files = []
     if 'files' in torrent["info"]:
@@ -44,6 +45,7 @@ def store_files_and_size(torrent, torrent_id, size):
         files.append(info['info']['name'])
     if files:
         add_torrent_files_and_size(files, torrent_id, size)
+
 
 def get_torrent_size(torrent_dict):
     size = 0
@@ -57,11 +59,12 @@ def get_torrent_size(torrent_dict):
         size = torrent_dict["info"]["length"]
     return size
 
+
 def torrent_full_delete(id_torrent):
     filename = get_torrent_filename(id_torrent)
     if filename:
-        if TORRENT_PERSIST == False:
-           file_path = app.config['UPLOAD_FOLDER'] + filename
-           if os.path.exists(file_path):
-               os.remove(file_path)
+        if not TORRENT_PERSIST:
+            file_path = app.config['UPLOAD_FOLDER'] + filename
+            if os.path.exists(file_path):
+                os.remove(file_path)
         delete_torrent(id_torrent)
