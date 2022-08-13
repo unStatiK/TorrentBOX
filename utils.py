@@ -17,7 +17,9 @@ def generate_password_hash(password):
 
 def uniqid():
     local_time = time.time()
-    return '%4x%05x' % (math.floor(local_time), math.floor((local_time - math.floor(local_time)) * 1000000))
+    ltf = math.floor(local_time)
+    return '%4x%05x' % (math.floor(local_time),
+                        math.floor((local_time - ltf) * 1000000))
 
 
 class SizeUnit(enum.Enum):

@@ -4,8 +4,10 @@ from main import db
 from sqlalchemy.orm import relationship
 
 tags_links = db.Table('tags_links', db.metadata,
-                      db.Column('id_tags', db.Integer, db.ForeignKey('tags.id')),
-                      db.Column('id_torrent', db.Integer, db.ForeignKey('torrents.id'))
+                      db.Column('id_tags', db.Integer,
+                                db.ForeignKey('tags.id')),
+                      db.Column('id_torrent', db.Integer,
+                                db.ForeignKey('torrents.id'))
                       )
 
 
@@ -62,7 +64,8 @@ class Torrents(db.Model):
 
 
 class TorrentsData(db.Model):
-    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'), primary_key=True, autoincrement=False)
+    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'),
+                           primary_key=True, autoincrement=False)
     payload = db.Column(db.String)
 
     def __init__(self, id_torrent, payload):
@@ -72,7 +75,8 @@ class TorrentsData(db.Model):
 
 class TorrentsFiles(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'), primary_key=False, autoincrement=False)
+    id_torrent = db.Column(db.Integer, db.ForeignKey('torrents.id'),
+                           primary_key=False, autoincrement=False)
     filename = db.Column(db.String)
 
     def __init__(self, id_torrent, filename):

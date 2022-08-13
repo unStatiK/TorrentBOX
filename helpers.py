@@ -18,17 +18,21 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
             size = get_torrent_size(torrent_)
             file_context.seek(0)
             file_payload = base64.b64encode(file_context.read())
-            new_id = add_torrent_with_payload(name, description, filename, user_id, size, file_payload.decode("utf-8"))
+            new_id = add_torrent_with_payload(name, description,
+                                              filename, user_id, size,
+                                              file_payload.decode("utf-8"))
             store_files_and_size(torrent_, new_id, size)
         else:
             if os.path.exists(app.config['UPLOAD_FOLDER']):
-                file_context.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file_context.save(os.path.join(app.config['UPLOAD_FOLDER'],
+                                  filename))
                 try:
                     torrent_file = app.config['UPLOAD_FOLDER'] + filename
                     if torrent_file:
                         torrent_ = decode(torrent_file)
                         size = get_torrent_size(torrent_)
-                        new_id = add_torrent(name, description, filename, user_id, size)
+                        new_id = add_torrent(name, description, filename,
+                                             user_id, size)
                         store_files_and_size(torrent_, new_id, size)
                 except IOError:
                     return

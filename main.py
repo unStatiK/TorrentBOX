@@ -5,12 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 from session import ItsdangerousSessionInterface
 from pg_config import DB_URI
 
-####### Uncomment this for use Mysql/MariaDB ########
-#from mysql_config import DB_URI
+# Uncomment this for use Mysql/MariaDB ########
+# from mysql_config import DB_URI
 
 app = Flask(__name__)
 
-####### Edit this options ###########################
+# Edit this options #
 TORRENT_PERSIST = False
 UPLOAD_FOLDER = '/path/to/torrents/folder/'
 PASSWORD_SALT = 'your_salt_for_password'

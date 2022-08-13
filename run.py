@@ -59,7 +59,8 @@ app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 def make_json_response(data):
-    return app.response_class(response=json.dumps(data), mimetype='application/json')
+    return app.response_class(response=json.dumps(data),
+                              mimetype='application/json')
 
 
 @app.route('/logout/')
@@ -96,10 +97,11 @@ def index():
         tags = fetch_tags()
 
         torrents_page = fetch_torrents_page(page_)
-        return render_template('index.html', torrents=torrents_page['items'], tags=tags,
-                               count=torrents_size_info['count'], size=torrents_size,
-                               pages=page_count,
-                               page=page_, authors=torrents_page['owners'], auth=is_auth, admin=is_admin)
+        return render_template('index.html', torrents=torrents_page['items'],
+                               tags=tags, count=torrents_size_info['count'],
+                               size=torrents_size, pages=page_count,
+                               page=page_, authors=torrents_page['owners'],
+                               auth=is_auth, admin=is_admin)
 
     return render_template('index.html', auth=is_auth, admin=is_admin)
 
@@ -109,7 +111,8 @@ def torrent(id_torrent):
     data = get_torrent_data(id_torrent)
     if data:
         filename = get_torrent_filename(id_torrent)
-        return send_file(io.BytesIO(data), mimetype='application/octet-stream', as_attachment=True, download_name='%s' % filename)
+        return send_file(io.BytesIO(data), mimetype='application/octet-stream',
+                         as_attachment=True, download_name='%s' % filename)
 
 
 @app.route('/about/')
@@ -121,7 +124,8 @@ def about():
 def login():
     if request.method == 'POST':
         form = LoginForm(request.form)
-        if form.validate() and check_login(form.login.data, form.password.data):
+        if form.validate() and check_login(form.login.data,
+                                           form.password.data):
             session[USER_TOKEN] = form.login.data
             session[USER_ID_TOKEN] = int(get_id_login(form.login.data))
             return redirect('/user_page/')
@@ -162,7 +166,8 @@ def admin():
             torrents = get_all_torrents()
             tags = get_all_tags()
             users = get_all_users()
-            return render_template('admin.html', torrents=torrents, tags=tags, users=users)
+            return render_template('admin.html', torrents=torrents,
+                                   tags=tags, users=users)
         else:
             session.clear()
             return redirect('/')
@@ -174,7 +179,8 @@ def tag_edit(id_tag):
         if request.method == 'POST':
             if 'tag' in request.form:
                 user_session_info = check_user_session()
-                if user_session_info['is_auth'] and user_session_info['is_admin']:
+                if user_session_info['is_auth'] and \
+                   user_session_info['is_admin']:
                     requested_tag = request.form['tag'].strip()
                     if requested_tag != "":
                         update_tag_name(id_tag, requested_tag)
@@ -199,7 +205,8 @@ def tag_delete(id_tag):
         if request.method == 'POST':
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
-                if 'accept' in request.form and request.form['accept'] == "yes":
+                if 'accept' in request.form and \
+                 request.form['accept'] == "yes":
                     delete_tag(id_tag)
                 return redirect("/admin/")
             else:
@@ -215,9 +222,11 @@ def tag_delete(id_tag):
 def user_edit(id_user):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
-            if USER_TOKEN in request.form and 'password' in request.form and 're_password' in request.form:
+            if USER_TOKEN in request.form and \
+              'password' in request.form and 're_password' in request.form:
                 user_session_info = check_user_session()
-                if user_session_info['is_auth'] and user_session_info['is_admin']:
+                if user_session_info['is_auth'] and \
+                   user_session_info['is_admin']:
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
                     re_password = request.form['re_password'].strip()
@@ -245,9 +254,11 @@ def user_edit(id_user):
 def user_add():
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         if request.method == 'POST':
-            if USER_TOKEN in request.form and 'password' in request.form and 're_password' in request.form:
+            if USER_TOKEN in request.form and \
+              'password' in request.form and 're_password' in request.form:
                 user_session_info = check_user_session()
-                if user_session_info['is_auth'] and user_session_info['is_admin']:
+                if user_session_info['is_auth'] and \
+                   user_session_info['is_admin']:
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
                     re_password = request.form['re_password'].strip()
@@ -273,7 +284,8 @@ def user_delete(id_user):
         if request.method == 'POST':
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
-                if 'accept' in request.form and request.form['accept'] == "yes":
+                if 'accept' in request.form and \
+                   request.form['accept'] == "yes":
                     delete_account(id_user)
                 return redirect("/admin/")
             else:
@@ -316,13 +328,15 @@ def addtag():
                         tags = fetch_tag_by_name(newtag)
                         if not tags:
                             add_tag(torrent_id, newtag)
-                            return redirect('/user_page/edit/' + str(request.form['torrent_id']))
+                            tid_str = str(request.form['torrent_id'])
+                            return redirect('/user_page/edit/%s' % tid_str)
     else:
         return redirect('/')
     return redirect('/user_page/')
 
 
-@app.route('/user_page/torrent/<int:id_torrent>/addtag/', methods=['POST', 'GET'])
+@app.route('/user_page/torrent/<int:id_torrent>/addtag/',
+           methods=['POST', 'GET'])
 def addtag_torrent(id_torrent):
     if USER_TOKEN in session and USER_ID_TOKEN in session:
         user_session_info = check_user_session()
@@ -330,7 +344,8 @@ def addtag_torrent(id_torrent):
             session.clear()
             return redirect('/')
         if request.method == 'POST':
-            if 'tag' in request.form and isinstance(session[USER_ID_TOKEN], int):
+            if 'tag' in request.form and \
+              isinstance(session[USER_ID_TOKEN], int):
                 user_id = int(session[USER_ID_TOKEN])
                 tag = str(request.form['tag'])
                 attache_tag(id_torrent, user_id, tag)
@@ -377,7 +392,8 @@ def edit(torrent_id):
             all_tags = get_all_tags()
             tags = fetch_tags_by_torrent(torrent_id)
             if current_torrent:
-                return render_template('edit.html', torrent=current_torrent, torrent_id=torrent_id, tags=tags,
+                return render_template('edit.html', torrent=current_torrent,
+                                       torrent_id=torrent_id, tags=tags,
                                        all_tags=all_tags)
             else:
                 return render_template('user.html')
@@ -406,7 +422,8 @@ def delete(id_torrent):
 
 @app.route('/user_page/upload/', methods=['POST', 'GET'])
 def upload():
-    if USER_TOKEN not in session and USER_ID_TOKEN not in session and not isinstance(session[USER_ID_TOKEN], int):
+    if USER_TOKEN not in session and USER_ID_TOKEN not in session and \
+      not isinstance(session[USER_ID_TOKEN], int):
         return redirect('/')
 
     user_session_info = check_user_session()
@@ -425,14 +442,17 @@ def upload():
 
             if file_context and allowed_file(filename):
                 filename = generate_filename()
-                upload_torrent_file(name, description, file_context, filename, user_id)
+                upload_torrent_file(name, description,
+                                    file_context, filename, user_id)
                 return redirect('/user_page/')
     return render_template('upload.html')
 
 
 @app.route(PUBLIC_API_URLS['torrent_upload'], methods=['POST'])
 def torrent_upload():
-    if request.method == 'POST' and 'login' in request.args and 'password' in request.args and 'name' in request.args and 'desc' in request.args:
+    if request.method == 'POST' and 'login' in request.args and \
+     'password' in request.args and 'name' in request.args and \
+     'desc' in request.args:
         current_login = request.args.get('login')
         password = request.args.get('password')
         name = request.args.get('name')
@@ -440,11 +460,13 @@ def torrent_upload():
         if check_login(current_login, password):
             user_id = get_id_login(current_login)
             filename = generate_filename()
-            file_context = FileStorage(io.BytesIO(request.data), filename=filename)
-            upload_torrent_file(name, description, file_context, filename, user_id)
-            d = {'status':'OK'}
+            file_context = FileStorage(io.BytesIO(request.data),
+                                       filename=filename)
+            upload_torrent_file(name, description, file_context,
+                                filename, user_id)
+            d = {'status': 'OK'}
             return make_json_response(d)
-    d = {'status':'fail'}
+    d = {'status': 'fail'}
     return make_json_response(d)
 
 
@@ -460,7 +482,8 @@ def info(id_torrent):
         else:
             error = True
             current_info = torrent_
-        return render_template('info.html', torrent=torrent, info=current_info, torrent_id=id_torrent, error=error)
+        return render_template('info.html', torrent=torrent, info=current_info,
+                               torrent_id=id_torrent, error=error)
     else:
         return redirect('/')
 
