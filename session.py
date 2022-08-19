@@ -55,5 +55,5 @@ class ItsdangerousSessionInterface(SessionInterface):
 
 
 class LoginForm(Form):
-    login = StringField('Login', [validators.Length(min=3, max=25)])
-    password = PasswordField('Password', [validators.Length(min=3, max=25)])
+    login = StringField('Login', [validators.Length(min=2, max=25)])
+    password = PasswordField('Password', [validators.Length(min=6, max=256)])

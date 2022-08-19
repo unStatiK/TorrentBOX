@@ -5,7 +5,7 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from flask import render_template, redirect, request, abort, send_file
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
+from werkzeug.datastructures import FileStorage, MultiDict
 
 from db_accounts_utils import *
 from db_torrents_utils import *
@@ -453,19 +453,23 @@ def torrent_upload():
     if request.method == 'POST' and 'login' in request.args and \
      'password' in request.args and 'name' in request.args and \
      'desc' in request.args:
-        current_login = request.args.get('login')
-        password = request.args.get('password')
-        name = request.args.get('name')
-        description = request.args.get('desc')
-        if check_login(current_login, password):
-            user_id = get_id_login(current_login)
-            filename = generate_filename()
-            file_context = FileStorage(io.BytesIO(request.data),
-                                       filename=filename)
-            upload_torrent_file(name, description, file_context,
-                                filename, user_id)
-            d = {'status': 'OK'}
-            return make_json_response(d)
+        form = LoginForm(MultiDict([
+            ('login', request.args.get('login')),
+            ('password', request.args.get('password'))]))
+        if form.validate():
+            current_login = form.login.data
+            password = form.password.data
+            name = secure_filename(request.args.get('name').strip())
+            description = request.args.get('desc').strip()
+            if check_login(current_login, password):
+                user_id = get_id_login(current_login)
+                filename = generate_filename()
+                file_context = FileStorage(io.BytesIO(request.data),
+                                           filename=filename)
+                upload_torrent_file(name, description, file_context,
+                                    filename, user_id)
+                d = {'status': 'OK'}
+                return make_json_response(d)
     d = {'status': 'fail'}
     return make_json_response(d)
 
