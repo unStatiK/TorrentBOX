@@ -10,6 +10,7 @@ from utils import uniqid
 
 
 def upload_torrent_file(name, description, file_context, filename, user_id):
+    torrent_file = None
     if name != "" and description and filename != "":
         uid = uniqid()
         filename = "".join([uid, ".torrent"])
@@ -24,17 +25,19 @@ def upload_torrent_file(name, description, file_context, filename, user_id):
             store_files_and_size(torrent_, new_id, size)
         else:
             if os.path.exists(app.config['UPLOAD_FOLDER']):
-                file_context.save(os.path.join(app.config['UPLOAD_FOLDER'],
-                                  filename))
                 try:
                     torrent_file = app.config['UPLOAD_FOLDER'] + filename
+                    file_context.save(os.path.join(app.config['UPLOAD_FOLDER'],
+                                                   filename))
                     if torrent_file:
                         torrent_ = decode(torrent_file)
                         size = get_torrent_size(torrent_)
                         new_id = add_torrent(name, description, filename,
                                              user_id, size)
                         store_files_and_size(torrent_, new_id, size)
-                except IOError:
+                except (Exception,):
+                    if torrent_file and os.path.exists(torrent_file):
+                        os.remove(torrent_file)
                     return
 
 
