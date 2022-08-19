@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from utils import generate_password_hash
+from werkzeug.datastructures import MultiDict
+from session import LoginForm
 import getopt
 import sys
 
@@ -59,6 +61,12 @@ def generate_account():
                 need_help = True
             if key == "-v":
                 need_show_hash_string = True
+
+        form = LoginForm(MultiDict([('login', name), ('password', password)]))
+        if not form.validate():
+            for fieldName, errorMessages in form.errors.items():
+                print("'%s' parameter error: %s" % (fieldName, ",".join(errorMessages)))
+            return
 
         if need_help:
             show_help()
