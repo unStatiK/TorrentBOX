@@ -11,8 +11,13 @@ from pg_config import DB_URI
 app = Flask(__name__)
 
 # Edit this options #
-TORRENT_PERSIST = False
-UPLOAD_FOLDER = '/path/to/torrents/folder/'
+TORRENT_PERSIST = False  # store torrent data in db
+'''
+generate direct link for download .torrent file:
+APP_HOST/UPLOAD_FOLDER/file.torrent
+'''
+DIRECT_TORRENT_LINK = False
+UPLOAD_FOLDER = '/full_path/to/static/folder/'
 PASSWORD_SALT = 'your_salt_for_password'
 SESSION_SALT = 'your_salt_for_session'
 PAGE_TORRENT_COUNT = 20

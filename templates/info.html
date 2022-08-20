@@ -57,9 +57,11 @@
        {% endif %}
       {% endif %}
 
-        <!-- todo fix url -->
-         <tr><td colspan='2' align="center"><h1><a href="/torrent/get/{{ torrent_id }}/">DOWNLOAD</a></h1>
-         </tr>
+	    {% if is_direct %}
+            <tr><td colspan='2' align="center"><h1><a href="/static/{{ torrent.filename }}/">DOWNLOAD</a></h1></tr>
+        {% else %}
+            <tr><td colspan='2' align="center"><h1><a href="/torrent/get/{{ torrent_id }}/">DOWNLOAD</a></h1></tr>
+        {% endif %}
 
 </table>
 <hr>

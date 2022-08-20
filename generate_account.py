@@ -65,7 +65,8 @@ def generate_account():
         form = LoginForm(MultiDict([('login', name), ('password', password)]))
         if not form.validate():
             for fieldName, errorMessages in form.errors.items():
-                print("'%s' parameter error: %s" % (fieldName, ",".join(errorMessages)))
+                print("'%s' parameter error: %s" % (fieldName,
+                                                    ",".join(errorMessages)))
             return
 
         if need_help:

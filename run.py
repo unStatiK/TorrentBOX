@@ -10,7 +10,7 @@ from werkzeug.datastructures import FileStorage, MultiDict
 from db_accounts_utils import *
 from db_torrents_utils import *
 from helpers import torrent_full_delete, upload_torrent_file
-from main import app, APP_HOST, APP_PORT
+from main import app, APP_HOST, APP_PORT, TORRENT_PERSIST, DIRECT_TORRENT_LINK
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
 from torrent_utils import allowed_file, decode_data
@@ -101,7 +101,8 @@ def index():
                                tags=tags, count=torrents_size_info['count'],
                                size=torrents_size, pages=page_count,
                                page=page_, authors=torrents_page['owners'],
-                               auth=is_auth, admin=is_admin)
+                               auth=is_auth, admin=is_admin,
+                               is_direct=DIRECT_TORRENT_LINK)
 
     return render_template('index.html', auth=is_auth, admin=is_admin)
 
@@ -144,7 +145,8 @@ def login():
 @app.route('/tag/<int:id_tag>/')
 def tag(id_tag):
     torrents = fetch_torrents_by_tag(id_tag)
-    return render_template('tag.html', torrents=torrents)
+    return render_template('tag.html', torrents=torrents,
+                           is_direct=DIRECT_TORRENT_LINK)
 
 
 @app.route('/search/', methods=['GET', 'POST'])
@@ -154,7 +156,8 @@ def search():
             pattern = request.form['pattern'].strip()
             if pattern != "":
                 torrents = search_torrents(pattern)
-                return render_template('search.html', torrents=torrents)
+                return render_template('search.html', torrents=torrents,
+                                       is_direct=DIRECT_TORRENT_LINK)
     return redirect('/')
 
 
@@ -180,7 +183,7 @@ def tag_edit(id_tag):
             if 'tag' in request.form:
                 user_session_info = check_user_session()
                 if user_session_info['is_auth'] and \
-                   user_session_info['is_admin']:
+                        user_session_info['is_admin']:
                     requested_tag = request.form['tag'].strip()
                     if requested_tag != "":
                         update_tag_name(id_tag, requested_tag)
@@ -206,7 +209,7 @@ def tag_delete(id_tag):
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
                 if 'accept' in request.form and \
-                 request.form['accept'] == "yes":
+                        request.form['accept'] == "yes":
                     delete_tag(id_tag)
                 return redirect("/admin/")
             else:
@@ -226,7 +229,7 @@ def user_edit(id_user):
               'password' in request.form and 're_password' in request.form:
                 user_session_info = check_user_session()
                 if user_session_info['is_auth'] and \
-                   user_session_info['is_admin']:
+                        user_session_info['is_admin']:
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
                     re_password = request.form['re_password'].strip()
@@ -258,7 +261,7 @@ def user_add():
               'password' in request.form and 're_password' in request.form:
                 user_session_info = check_user_session()
                 if user_session_info['is_auth'] and \
-                   user_session_info['is_admin']:
+                        user_session_info['is_admin']:
                     name = request.form[USER_TOKEN].strip()
                     password = request.form['password'].strip()
                     re_password = request.form['re_password'].strip()
@@ -285,7 +288,7 @@ def user_delete(id_user):
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
                 if 'accept' in request.form and \
-                   request.form['accept'] == "yes":
+                        request.form['accept'] == "yes":
                     delete_account(id_user)
                 return redirect("/admin/")
             else:
@@ -345,7 +348,7 @@ def addtag_torrent(id_torrent):
             return redirect('/')
         if request.method == 'POST':
             if 'tag' in request.form and \
-              isinstance(session[USER_ID_TOKEN], int):
+                    isinstance(session[USER_ID_TOKEN], int):
                 user_id = int(session[USER_ID_TOKEN])
                 tag = str(request.form['tag'])
                 attache_tag(id_torrent, user_id, tag)
@@ -423,7 +426,7 @@ def delete(id_torrent):
 @app.route('/user_page/upload/', methods=['POST', 'GET'])
 def upload():
     if USER_TOKEN not in session and USER_ID_TOKEN not in session and \
-      not isinstance(session[USER_ID_TOKEN], int):
+            not isinstance(session[USER_ID_TOKEN], int):
         return redirect('/')
 
     user_session_info = check_user_session()
@@ -451,8 +454,8 @@ def upload():
 @app.route(PUBLIC_API_URLS['torrent_upload'], methods=['POST'])
 def torrent_upload():
     if request.method == 'POST' and 'login' in request.args and \
-     'password' in request.args and 'name' in request.args and \
-     'desc' in request.args:
+            'password' in request.args and 'name' in request.args and \
+            'desc' in request.args:
         form = LoginForm(MultiDict([
             ('login', request.args.get('login')),
             ('password', request.args.get('password'))]))
@@ -476,8 +479,9 @@ def torrent_upload():
 
 @app.route('/info/<int:id_torrent>/')
 def info(id_torrent):
+    torrent_obj = get_torrent_by_id(id_torrent)
     torrent_data = get_torrent_data(id_torrent)
-    if torrent_data:
+    if torrent and torrent_data:
         current_info = None
         error = None
         torrent_ = decode_data(torrent_data)
@@ -486,8 +490,9 @@ def info(id_torrent):
         else:
             error = True
             current_info = torrent_
-        return render_template('info.html', torrent=torrent, info=current_info,
-                               torrent_id=id_torrent, error=error)
+        return render_template('info.html', torrent=torrent_obj,
+                               info=current_info, torrent_id=id_torrent,
+                               error=error, is_direct=DIRECT_TORRENT_LINK)
     else:
         return redirect('/')
 
@@ -504,7 +509,14 @@ def server_error(error):
         return redirect('/')
 
 
+def check_config():
+    if DIRECT_TORRENT_LINK and TORRENT_PERSIST:
+        raise SystemError('''Direct link cannot be generated for torrents \
+while TORRENT_PERSIST is True''')
+
+
 if __name__ == '__main__':
+    check_config()
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(APP_PORT, APP_HOST)
     IOLoop.instance().start()

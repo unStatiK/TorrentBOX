@@ -48,8 +48,12 @@
 		<td class="content"><a href="/info/{{ item.id }}">{{ item.description }}</a></td>
 		<td class="content">{{ convert_unit(item.size) }}</td>
 
-        <!-- todo fix urls -->
-        <td class="content"><a href='http://TorrentBOX:81/{{ item.filename }}'>&gt;&gt;&gt;</a></td>
+		{% if is_direct %}
+			<td class="content"><a href='/static/{{ item.filename }}'>&gt;&gt;&gt;</a></td>
+        {% else %}
+			<td class="content"><a href='/torrent/get/{{ item.id }}/'>&gt;&gt;&gt;</a></td>
+        {% endif %}
+
 	</tr>
         {% endfor %}
 </table>
