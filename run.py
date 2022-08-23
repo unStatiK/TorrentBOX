@@ -10,7 +10,8 @@ from werkzeug.datastructures import FileStorage, MultiDict
 from db_accounts_utils import *
 from db_torrents_utils import *
 from helpers import torrent_full_delete, upload_torrent_file
-from main import app, APP_HOST, APP_PORT, TORRENT_PERSIST, DIRECT_TORRENT_LINK
+from main import app, babel, LOCALE
+from main import APP_HOST, APP_PORT, TORRENT_PERSIST, DIRECT_TORRENT_LINK
 from session import LoginForm
 from session_keys import USER_TOKEN, USER_ID_TOKEN
 from torrent_utils import allowed_file, decode_data
@@ -61,6 +62,14 @@ app.jinja_env.globals['csrf_token'] = generate_csrf_token
 def make_json_response(data):
     return app.response_class(response=json.dumps(data),
                               mimetype='application/json')
+
+
+@babel.localeselector
+def get_locale():
+    if LOCALE == 'auto':
+        return request.accept_languages.best_match(app.config['LANGUAGES'])
+    else:
+        return LOCALE
 
 
 @app.route('/logout/')

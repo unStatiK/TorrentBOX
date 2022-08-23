@@ -7,3 +7,4 @@ torrent-parser==0.4.1
 typing-extensions==4.3.0
 ujson==5.4.0
 hurry.filesize==0.9
+flask-babel==2.0.0
