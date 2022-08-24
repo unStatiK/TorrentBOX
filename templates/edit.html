@@ -27,7 +27,7 @@
 		   </td>
 	</tr>
     <tr ><td colspan='2' align="right">
-	   <a href="/about">о трекере&nbsp;&nbsp;</a>
+	   <a href="/about">{{ _('about') }}&nbsp;&nbsp;</a>
 	<br>
 	</td></tr>	
  </table>
@@ -45,7 +45,7 @@
 	<div style="border:1px solid #004000;">
 
             {% for tag in tags %}
-            <br>&nbsp;&bull;{{ tag.name }} [ <a href="/user_page/torrent/{{ torrent_id }}/tag/{{ tag.id }}/delete">удалить</a> ]&nbsp;
+            <br>&nbsp;&bull;{{ tag.name }} [ <a href="/user_page/torrent/{{ torrent_id }}/tag/{{ tag.id }}/delete">{{ _('delete') }}</a> ]&nbsp;
            {% endfor %}
 
 	<br><br></div>
@@ -58,7 +58,7 @@
                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                <textarea name=file_name rows=5 cols=70>{{ torrent.name }}</textarea><br><br>
                <textarea name=file_desc rows=5 cols=70>{{ torrent.description }}</textarea><br><br>
-               <input type="submit" value="save" />
+               <input type="submit" value="{{ _('save') }}" />
            </form>
            {% if all_tags %}<br><br>
            <form action="/user_page/torrent/{{ torrent_id }}/addtag/" method="POST">
@@ -68,16 +68,16 @@
                   <option value={{ tag.id }}> {{ tag.name }}</option>
                {% endfor %}
            </select>
-               <input type="submit" value="add tag" />
+               <input type="submit" value="{{ _('add_tag') }}" />
            </form>
            {% endif %}
             <br><br>
             <form action="/user_page/addtag/" method="post">
                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-               <label for="tag">Новый тег</label>  
+               <label for="tag">{{ _('new_tag') }}</label>  
                <input type="text" id="tag" name="newtag">
                <input type="hidden" name="torrent_id" value={{ torrent_id }}>
-               <input type="submit" value="add" />
+               <input type="submit" value="{{ _('add') }}" />
            </form>
          </center>
 

@@ -15,20 +15,18 @@
 	<p><b>torrent-box::INFO</b>
 	</td>
 	
-	 <!-- <a href="/user/logout">выход &gt;&gt;</a> !-->
 	 
 
     <td align="right">
 	       <form action='/search/' method='post'>
-			<!--<input type='text' name='login' class="small_auth">!-->
             <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<input type='text' name='login' class="small_auth">
-			<input type='submit' value='поиск' />
+			<input type='submit' value='{{ _('search') }}' />
               </form>
 		   </td>
 	</tr>
     <tr ><td colspan='2' align="right">
-	   <a href="/about">о трекере&nbsp;&nbsp;</a>
+	   <a href="/about">{{ _('about') }}&nbsp;&nbsp;</a>
 	<br>
 	</td></tr>	
  </table>
@@ -38,7 +36,7 @@
            <form action="/admin/tag/edit/{{ tag.id }}/" method="post">
                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                <input type="text " value="{{ tag.name }}" name="tag"><br><br>
-               <input type="submit" value="save" />
+               <input type="submit" value="{{ _('save') }}" />
            </form>
 
  {% endif %}

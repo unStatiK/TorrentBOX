@@ -9,13 +9,13 @@
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
 </head>
 <body>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
+    <title>{{ _('upload_new_file_title') }}</title>
+    <h1>{{ _('upload_new_file') }}</h1>
 <cneter>
     <form action="/user_page/upload/" method="post" enctype="multipart/form-data">
      <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-         Название<input type="text" name="name"><br><br>
-	 <label for="ds">Описание</label><textarea name="desc" rows=5 cols=70 id="ds"></textarea><br>
+         {{ _('name') }}<input type="text" name="name"><br><br>
+	 <label for="ds">{{ _('description') }}</label><textarea name="desc" rows=5 cols=70 id="ds"></textarea><br>
       <p><input type=file name=file>
          <input type=submit value=Upload>
     </form>

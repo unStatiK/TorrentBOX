@@ -1,7 +1,7 @@
 <!doctype html>
-    <h1>Delete Tag?</h1>
+    <h1>{{ _('q_delete_tag') }}</h1>
     <form action="/admin/tag/delete/{{ id_tag }}/" method=post>
          <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-         <input type=submit value="no" name=reject>
-         <input type=submit value="yes" name=accept>
+         <input type=submit value="{{ _('no') }}" name=reject>
+         <input type=submit value="{{ _('yes') }}" name=accept>
     </form>

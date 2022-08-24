@@ -12,19 +12,17 @@
    <tr><td>
 	<p>torrent-box
 	</td>
-	
-	 <!-- <a href="/user/logout">выход &gt;&gt;</a> !-->
-	 
+		 
 
     <td align="right">
 	       <form action='/search/' method='post'>
             <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 			<input type='text' name='pattern' class="small_auth">
-			<input type='submit' value='поиск' />
+			<input type='submit' value='{{ _('search') }}' />
 		   </td>
 	</tr>
     <tr ><td colspan='2' align="right">
-	   <a href="/about">о трекере&nbsp;&nbsp;</a>
+	   <a href="/about">{{ _('about') }}&nbsp;&nbsp;</a>
 	<br>
 	</td></tr>	
  </table>
@@ -36,10 +34,10 @@
 <table class='content_box'>
 	<thead>
 	<tr>
-		<td class="header">название</td>
-		<td class="header">описание</td>
-		<td class="header">размер раздачи</td>
-		<td class="header">download</td>	
+		<td class="header">{{ _('torrents_table_name') }}</td>
+		<td class="header">{{ _('torrents_table_description') }}</td>
+		<td class="header">{{ _('torrents_table_size') }}</td>
+		<td class="header">{{ _('download') }}</td>	
 	</tr>
 	</thead>
         {% for torrent in torrents %}

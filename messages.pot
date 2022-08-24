@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-08-23 17:38+0300\n"
+"POT-Creation-Date: 2022-08-25 01:25+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,186 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: templates/index.html:68
+#: templates/admin.html:25 templates/edit.html:30 templates/index.html:27
+#: templates/info.html:29 templates/search.html:25 templates/tag.html:25
+#: templates/tag_edit.html:29 templates/user_add.html:29
+#: templates/user_edit.html:28
+msgid "about"
+msgstr ""
+
+#: templates/admin.html:35
+msgid "torrents_list"
+msgstr ""
+
+#: templates/admin.html:41 templates/admin.html:61 templates/admin.html:82
+#: templates/user.html:40
+msgid "edit"
+msgstr ""
+
+#: templates/admin.html:41 templates/admin.html:61 templates/admin.html:82
+#: templates/edit.html:48 templates/user.html:40
+msgid "delete"
+msgstr ""
+
+#: templates/admin.html:55
+msgid "tags_list"
+msgstr ""
+
+#: templates/admin.html:76
+msgid "user_list"
+msgstr ""
+
+#: templates/admin.html:92
+msgid "add_user"
+msgstr ""
+
+#: templates/delete.html:2
+msgid "q_delete_file"
+msgstr ""
+
+#: templates/delete.html:5 templates/tag_delete.html:5
+#: templates/user_delete.html:5
+msgid "no"
+msgstr ""
+
+#: templates/delete.html:6 templates/tag_delete.html:6
+#: templates/user_delete.html:6
+msgid "yes"
+msgstr ""
+
+#: templates/edit.html:61 templates/tag_edit.html:39 templates/user_add.html:40
+#: templates/user_edit.html:40
+msgid "save"
+msgstr ""
+
+#: templates/edit.html:71
+msgid "add_tag"
+msgstr ""
+
+#: templates/edit.html:77
+msgid "new_tag"
+msgstr ""
+
+#: templates/edit.html:80
+msgid "add"
+msgstr ""
+
+#: templates/index.html:22 templates/search.html:21 templates/tag.html:21
+#: templates/tag_edit.html:24 templates/user.html:21 templates/user_add.html:24
+#: templates/user_edit.html:23
+msgid "search"
+msgstr ""
+
+#: templates/index.html:29
+msgid "my_page"
+msgstr ""
+
+#: templates/index.html:31
+msgid "admin_page"
+msgstr ""
+
+#: templates/index.html:33
+msgid "exit"
+msgstr ""
+
+#: templates/index.html:47
+msgid "tags"
+msgstr ""
+
+#: templates/index.html:68 templates/search.html:37 templates/tag.html:37
 msgid "torrents_table_name"
+msgstr ""
+
+#: templates/index.html:69 templates/search.html:38 templates/tag.html:38
+msgid "torrents_table_description"
+msgstr ""
+
+#: templates/index.html:70
+msgid "torrents_table_author"
+msgstr ""
+
+#: templates/index.html:71 templates/info.html:40 templates/search.html:39
+#: templates/tag.html:39
+msgid "torrents_table_size"
+msgstr ""
+
+#: templates/index.html:72 templates/search.html:40 templates/tag.html:40
+msgid "download"
+msgstr ""
+
+#: templates/index.html:90
+msgid "full_torrents_size"
+msgstr ""
+
+#: templates/index.html:90
+msgid "torrents_count"
+msgstr ""
+
+#: templates/info.html:39
+msgid "files_list"
+msgstr ""
+
+#: templates/info.html:60 templates/info.html:62
+msgid "upper_download"
+msgstr ""
+
+#: templates/login.html:9
+msgid "auth"
+msgstr ""
+
+#: templates/login.html:17 templates/login.html:38
+msgid "in_login"
+msgstr ""
+
+#: templates/login.html:31 templates/user_add.html:37
+msgid "login"
+msgstr ""
+
+#: templates/login.html:34 templates/user_add.html:38
+msgid "password"
+msgstr ""
+
+#: templates/login.html:44
+msgid "credentials_not_valid"
+msgstr ""
+
+#: templates/tag_delete.html:2
+msgid "q_delete_tag"
+msgstr ""
+
+#: templates/upload.html:12
+msgid "upload_new_file_title"
+msgstr ""
+
+#: templates/upload.html:13
+msgid "upload_new_file"
+msgstr ""
+
+#: templates/upload.html:17
+msgid "name"
+msgstr ""
+
+#: templates/upload.html:18
+msgid "description"
+msgstr ""
+
+#: templates/user.html:34
+msgid "uploaded_torrents_list"
+msgstr ""
+
+#: templates/user.html:48
+msgid "upper_upload"
+msgstr ""
+
+#: templates/user_add.html:15
+msgid "user_adding"
+msgstr ""
+
+#: templates/user_add.html:39
+msgid "re_password"
+msgstr ""
+
+#: templates/user_delete.html:2
+msgid "q_delete_user"
 msgstr ""
 

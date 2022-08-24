@@ -6,7 +6,7 @@
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
  <link type="text/css" rel="stylesheet" href="/static/cyber.css">
 <link type="image/x-icon" rel="icon" href="http://odmins-it.ru/favicon.ico" >
-	<title>Авторизация админа</title>
+	<title>{{ _('auth') }}</title>
 </head>
 <body>
 
@@ -14,7 +14,7 @@
 
    <tr><td>
 
-	<p>torrent-box::Вход
+	<p>torrent-box::{{ _('in_login') }}
 
 	</td>
 
@@ -28,20 +28,20 @@
 	<form method='post' action='/login/'>
 		<table class='b_ad_auth_box'>
 			<tr>
-				<td>Login: </td><td><input type='text' name='login' class='admin_auth'></td>
+				<td>{{ _('login') }}: </td><td><input type='text' name='login' class='admin_auth'></td>
 			</tr>
 			<tr>
-				<td>Password: </td><td><input type='password' name='password' class='admin_auth'></td>
+				<td>{{ _('password') }}: </td><td><input type='password' name='password' class='admin_auth'></td>
 			</tr>
 			<tr>
                 <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-				<td class='r'>&nbsp;</td><td class='r'><input type='submit' value='Login'></td>
+				<td class='r'>&nbsp;</td><td class='r'><input type='submit' value='{{ _('in_login') }}'></td>
 			</tr>
 		</table>
 	</form>
 	
 	{% if error %}
-	<p id='error'>[!] неверный логин или пароль
+	<p id='error'>[!] {{ _('credentials_not_valid') }}
 	{% endif %}
  </center>
 <hr>

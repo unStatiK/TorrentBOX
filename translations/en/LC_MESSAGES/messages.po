@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-08-23 17:38+0300\n"
+"POT-Creation-Date: 2022-08-25 01:25+0300\n"
 "PO-Revision-Date: 2022-08-23 17:19+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,7 +18,186 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: templates/index.html:68
+#: templates/admin.html:25 templates/edit.html:30 templates/index.html:27
+#: templates/info.html:29 templates/search.html:25 templates/tag.html:25
+#: templates/tag_edit.html:29 templates/user_add.html:29
+#: templates/user_edit.html:28
+msgid "about"
+msgstr "about"
+
+#: templates/admin.html:35
+msgid "torrents_list"
+msgstr "torrents list"
+
+#: templates/admin.html:41 templates/admin.html:61 templates/admin.html:82
+#: templates/user.html:40
+msgid "edit"
+msgstr "edit"
+
+#: templates/admin.html:41 templates/admin.html:61 templates/admin.html:82
+#: templates/edit.html:48 templates/user.html:40
+msgid "delete"
+msgstr "delete"
+
+#: templates/admin.html:55
+msgid "tags_list"
+msgstr "tags list"
+
+#: templates/admin.html:76
+msgid "user_list"
+msgstr "users list"
+
+#: templates/admin.html:92
+msgid "add_user"
+msgstr "add user"
+
+#: templates/delete.html:2
+msgid "q_delete_file"
+msgstr "Delete File?"
+
+#: templates/delete.html:5 templates/tag_delete.html:5
+#: templates/user_delete.html:5
+msgid "no"
+msgstr "no"
+
+#: templates/delete.html:6 templates/tag_delete.html:6
+#: templates/user_delete.html:6
+msgid "yes"
+msgstr "yes"
+
+#: templates/edit.html:61 templates/tag_edit.html:39 templates/user_add.html:40
+#: templates/user_edit.html:40
+msgid "save"
+msgstr "save"
+
+#: templates/edit.html:71
+msgid "add_tag"
+msgstr "add tag"
+
+#: templates/edit.html:77
+msgid "new_tag"
+msgstr "New tag"
+
+#: templates/edit.html:80
+msgid "add"
+msgstr "add"
+
+#: templates/index.html:22 templates/search.html:21 templates/tag.html:21
+#: templates/tag_edit.html:24 templates/user.html:21 templates/user_add.html:24
+#: templates/user_edit.html:23
+msgid "search"
+msgstr "search"
+
+#: templates/index.html:29
+msgid "my_page"
+msgstr "my page"
+
+#: templates/index.html:31
+msgid "admin_page"
+msgstr "administration"
+
+#: templates/index.html:33
+msgid "exit"
+msgstr "exit"
+
+#: templates/index.html:47
+msgid "tags"
+msgstr "tags"
+
+#: templates/index.html:68 templates/search.html:37 templates/tag.html:37
 msgid "torrents_table_name"
 msgstr "name"
+
+#: templates/index.html:69 templates/search.html:38 templates/tag.html:38
+msgid "torrents_table_description"
+msgstr "description"
+
+#: templates/index.html:70
+msgid "torrents_table_author"
+msgstr "author"
+
+#: templates/index.html:71 templates/info.html:40 templates/search.html:39
+#: templates/tag.html:39
+msgid "torrents_table_size"
+msgstr "size"
+
+#: templates/index.html:72 templates/search.html:40 templates/tag.html:40
+msgid "download"
+msgstr "download"
+
+#: templates/index.html:90
+msgid "full_torrents_size"
+msgstr "Full torrents size"
+
+#: templates/index.html:90
+msgid "torrents_count"
+msgstr "Torrents files count"
+
+#: templates/info.html:39
+msgid "files_list"
+msgstr "files list"
+
+#: templates/info.html:60 templates/info.html:62
+msgid "upper_download"
+msgstr "DOWNLOAD"
+
+#: templates/login.html:9
+msgid "auth"
+msgstr "Authorization"
+
+#: templates/login.html:17 templates/login.html:38
+msgid "in_login"
+msgstr "Sign in"
+
+#: templates/login.html:31 templates/user_add.html:37
+msgid "login"
+msgstr "Login"
+
+#: templates/login.html:34 templates/user_add.html:38
+msgid "password"
+msgstr "Password"
+
+#: templates/login.html:44
+msgid "credentials_not_valid"
+msgstr "login or password not valid"
+
+#: templates/tag_delete.html:2
+msgid "q_delete_tag"
+msgstr "Delete tag?"
+
+#: templates/upload.html:12
+msgid "upload_new_file_title"
+msgstr "Upload new file"
+
+#: templates/upload.html:13
+msgid "upload_new_file"
+msgstr "Upload new file"
+
+#: templates/upload.html:17
+msgid "name"
+msgstr "Name"
+
+#: templates/upload.html:18
+msgid "description"
+msgstr "Description"
+
+#: templates/user.html:34
+msgid "uploaded_torrents_list"
+msgstr "uploaded torrents list"
+
+#: templates/user.html:48
+msgid "upper_upload"
+msgstr "UPLOAD"
+
+#: templates/user_add.html:15
+msgid "user_adding"
+msgstr "Adding user"
+
+#: templates/user_add.html:39
+msgid "re_password"
+msgstr "Repeat"
+
+#: templates/user_delete.html:2
+msgid "q_delete_user"
+msgstr "Delete user?"
 

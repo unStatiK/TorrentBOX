@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-08-23 17:38+0300\n"
+"POT-Creation-Date: 2022-08-25 01:25+0300\n"
 "PO-Revision-Date: 2022-08-23 17:19+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -19,7 +19,186 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: templates/index.html:68
+#: templates/admin.html:25 templates/edit.html:30 templates/index.html:27
+#: templates/info.html:29 templates/search.html:25 templates/tag.html:25
+#: templates/tag_edit.html:29 templates/user_add.html:29
+#: templates/user_edit.html:28
+msgid "about"
+msgstr "об архиве"
+
+#: templates/admin.html:35
+msgid "torrents_list"
+msgstr "список торрентов"
+
+#: templates/admin.html:41 templates/admin.html:61 templates/admin.html:82
+#: templates/user.html:40
+msgid "edit"
+msgstr "изменить"
+
+#: templates/admin.html:41 templates/admin.html:61 templates/admin.html:82
+#: templates/edit.html:48 templates/user.html:40
+msgid "delete"
+msgstr "удалить"
+
+#: templates/admin.html:55
+msgid "tags_list"
+msgstr "список тегов"
+
+#: templates/admin.html:76
+msgid "user_list"
+msgstr "список пользователей"
+
+#: templates/admin.html:92
+msgid "add_user"
+msgstr "добавить пользователя"
+
+#: templates/delete.html:2
+msgid "q_delete_file"
+msgstr "Удалить файл?"
+
+#: templates/delete.html:5 templates/tag_delete.html:5
+#: templates/user_delete.html:5
+msgid "no"
+msgstr "нет"
+
+#: templates/delete.html:6 templates/tag_delete.html:6
+#: templates/user_delete.html:6
+msgid "yes"
+msgstr "да"
+
+#: templates/edit.html:61 templates/tag_edit.html:39 templates/user_add.html:40
+#: templates/user_edit.html:40
+msgid "save"
+msgstr "сохранить"
+
+#: templates/edit.html:71
+msgid "add_tag"
+msgstr "добавить тег"
+
+#: templates/edit.html:77
+msgid "new_tag"
+msgstr "Новый тег"
+
+#: templates/edit.html:80
+msgid "add"
+msgstr "добавить"
+
+#: templates/index.html:22 templates/search.html:21 templates/tag.html:21
+#: templates/tag_edit.html:24 templates/user.html:21 templates/user_add.html:24
+#: templates/user_edit.html:23
+msgid "search"
+msgstr "поиск"
+
+#: templates/index.html:29
+msgid "my_page"
+msgstr "моя страница"
+
+#: templates/index.html:31
+msgid "admin_page"
+msgstr "администрирование"
+
+#: templates/index.html:33
+msgid "exit"
+msgstr "выход"
+
+#: templates/index.html:47
+msgid "tags"
+msgstr "теги"
+
+#: templates/index.html:68 templates/search.html:37 templates/tag.html:37
 msgid "torrents_table_name"
 msgstr "название"
+
+#: templates/index.html:69 templates/search.html:38 templates/tag.html:38
+msgid "torrents_table_description"
+msgstr "описание"
+
+#: templates/index.html:70
+msgid "torrents_table_author"
+msgstr "автор файла"
+
+#: templates/index.html:71 templates/info.html:40 templates/search.html:39
+#: templates/tag.html:39
+msgid "torrents_table_size"
+msgstr "размер"
+
+#: templates/index.html:72 templates/search.html:40 templates/tag.html:40
+msgid "download"
+msgstr "скачать"
+
+#: templates/index.html:90
+msgid "full_torrents_size"
+msgstr "Общий размер торрентов"
+
+#: templates/index.html:90
+msgid "torrents_count"
+msgstr "Всего файлов торрентов"
+
+#: templates/info.html:39
+msgid "files_list"
+msgstr "список файлов"
+
+#: templates/info.html:60 templates/info.html:62
+msgid "upper_download"
+msgstr "СКАЧАТЬ"
+
+#: templates/login.html:9
+msgid "auth"
+msgstr "Авторизация"
+
+#: templates/login.html:17 templates/login.html:38
+msgid "in_login"
+msgstr "Вход"
+
+#: templates/login.html:31 templates/user_add.html:37
+msgid "login"
+msgstr "Логин"
+
+#: templates/login.html:34 templates/user_add.html:38
+msgid "password"
+msgstr "Пароль"
+
+#: templates/login.html:44
+msgid "credentials_not_valid"
+msgstr "неверный логин или пароль"
+
+#: templates/tag_delete.html:2
+msgid "q_delete_tag"
+msgstr "Удалить тег?"
+
+#: templates/upload.html:12
+msgid "upload_new_file_title"
+msgstr "Загрузить новый файл"
+
+#: templates/upload.html:13
+msgid "upload_new_file"
+msgstr "Загрузить новый файл"
+
+#: templates/upload.html:17
+msgid "name"
+msgstr "Название"
+
+#: templates/upload.html:18
+msgid "description"
+msgstr "Описание"
+
+#: templates/user.html:34
+msgid "uploaded_torrents_list"
+msgstr "список загруженных торрентов"
+
+#: templates/user.html:48
+msgid "upper_upload"
+msgstr "ЗАГРУЗИТЬ"
+
+#: templates/user_add.html:15
+msgid "user_adding"
+msgstr "Добавление пользователя"
+
+#: templates/user_add.html:39
+msgid "re_password"
+msgstr "Повторить"
+
+#: templates/user_delete.html:2
+msgid "q_delete_user"
+msgstr "Удалить пользователя?"
 
