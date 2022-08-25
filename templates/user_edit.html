@@ -42,6 +42,10 @@
 
  {% endif %}
 
+        {% if is_error %}
+        <p id='error'>[!] {{ _('credentials_not_valid') }}
+        {% endif %}
+
    <center>
      <div class='foot'>powered by <a href="http://flask.pocoo.org/">Flask</a></div>
      <div class='foot'><br>created by unStatiK</div>

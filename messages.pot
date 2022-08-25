@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-08-25 01:25+0300\n"
+"POT-Creation-Date: 2022-08-25 21:11+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,7 +156,8 @@ msgstr ""
 msgid "password"
 msgstr ""
 
-#: templates/login.html:44
+#: templates/login.html:44 templates/user_add.html:44
+#: templates/user_edit.html:46
 msgid "credentials_not_valid"
 msgstr ""
 

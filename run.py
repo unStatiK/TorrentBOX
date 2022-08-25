@@ -245,7 +245,13 @@ def user_edit(id_user):
                     if name == "":
                         return redirect('/admin/')
                     if password == re_password:
-                        update_account(id_user, name, password)
+                        form = LoginForm(MultiDict([('login', name),
+                                                    ('password', password)]))
+                        if not form.validate():
+                            url = "/admin/user/edit/%s/?error=error" % id_user
+                            return redirect(url)
+                        else:
+                            update_account(id_user, name, password)
                     return redirect('/admin/')
                 else:
                     session.clear()
@@ -255,7 +261,12 @@ def user_edit(id_user):
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
                 user_context = get_account(id_user)
-                return render_template('user_edit.html', user=user_context)
+                is_error = False
+                if request.args.get('error') and \
+                   not request.args.get('error') == "":
+                    is_error = True
+                return render_template('user_edit.html', user=user_context,
+                                       is_error=is_error)
             else:
                 session.clear()
                 return redirect('/')
@@ -276,7 +287,13 @@ def user_add():
                     re_password = request.form['re_password'].strip()
                     if name != "" and password != "" and re_password != "":
                         if password == re_password:
-                            add_account(name, password)
+                            form = LoginForm(MultiDict([('login', name),
+                                                        ('password',
+                                                         password)]))
+                            if not form.validate():
+                                return redirect('/admin/user/add/?error=error')
+                            else:
+                                add_account(name, password)
                     return redirect('/admin/')
                 else:
                     session.clear()
@@ -284,7 +301,11 @@ def user_add():
         else:
             user_session_info = check_user_session()
             if user_session_info['is_auth'] and user_session_info['is_admin']:
-                return render_template('user_add.html')
+                is_error = False
+                if request.args.get('error') and \
+                   not request.args.get('error') == "":
+                    is_error = True
+                return render_template('user_add.html', is_error=is_error)
             else:
                 session.clear()
                 return redirect('/')
