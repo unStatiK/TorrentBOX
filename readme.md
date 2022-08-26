@@ -1,7 +1,7 @@
 # TorrentBOX
+This is a web-based torrent archive where you can upload torrent files.  It allows to view, search through and download any file (including ones uploaded by other users) at any time.
 
-# web torrent archive engine
-
+#
 Used technology:
 
 * Flask micro framework
@@ -17,6 +17,17 @@ Python3 compatibility only.
 
 Compatibility with PyPy3.
 
+# Screenshots
+
+main screen:
+![tb1](https://user-images.githubusercontent.com/343531/186961357-a6ec5c9d-0f2a-4c22-b2f1-b1624be7f45e.png)
+
+torrent info page:
+![tb2](https://user-images.githubusercontent.com/343531/186961409-b5744d32-8cfb-47ec-8588-f11b97770338.png)
+![tb3](https://user-images.githubusercontent.com/343531/186961425-db579c37-602f-4045-bcba-1bc97e423768.png)
+
+user page:
+![tb4](https://user-images.githubusercontent.com/343531/186961450-802f9eef-ba2a-44bb-a87a-ab4367ef0e0b.png)
 
 # Installation
 
